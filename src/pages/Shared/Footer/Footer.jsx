@@ -1,5 +1,5 @@
 import React from 'react';
-import ProFastLoogo from '../ProFastLoogo';
+import ProFastLoogo from '../ZapShiftLogo';
 
 const Footer = () => {
     return (

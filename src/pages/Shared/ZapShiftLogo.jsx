@@ -1,13 +1,13 @@
 import React from 'react';
 import logo from '../../assets/logo.png'
 
-const ProFastLoogo = () => {
+const ZapShiftLogo = () => {
     return (
-        <div>
+        <div className='flex items-center'>
             <img src={logo} alt="company logo" />
-            <p>ProFast</p>
+            <p>ZapShift</p>
         </div>
     );
 };
 
-export default ProFastLoogo;
+export default ZapShiftLogo;

@@ -30,7 +30,7 @@ const Brands = () => {
                 speed={50}
             >
                 {logos.map((logo, index) => (
-                    <div key={index} className="mx-8 flex items-center">
+                    <div key={index} className="mx-10 flex items-center">
                         <img
                             src={logo}
                             alt="brand"

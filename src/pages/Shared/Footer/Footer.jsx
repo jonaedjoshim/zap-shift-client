@@ -1,11 +1,11 @@
 import React from 'react';
-import ProFastLoogo from '../ZapShiftLogo';
+import ZapShiftLogo from '../ZapShiftLogo';
 
 const Footer = () => {
     return (
-        <footer className="max-w-400 rounded-xl mx-auto footer footer-horizontal footer-center text-primary-content p-10">
+        <footer className="max-w-400 rounded-xl mx-auto footer footer-horizontal footer-center p-10">
             <aside>
-                <ProFastLoogo />
+                <ZapShiftLogo />
                 <p className="font-bold">
                     ACME Industries Ltd.
                     <br />

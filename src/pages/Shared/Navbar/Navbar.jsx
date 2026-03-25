@@ -56,9 +56,13 @@ const Navbar = () => {
             <div className="navbar-end space-x-4">
                 <button
                     onClick={handleThemeChange}
-                    className="m-1 p-0 bg-transparent border-none cursor-pointer"
+                    className="group p-2 rounded-full bg-transparent hover:bg-gray-100/50 transition-all duration-300 ease-in-out active:scale-95 hover:shadow-[0_0_15px_rgba(3,55,61,0.2)] border-none cursor-pointer outline-none"
                 >
-                    <img src={themeBtn} alt="theme button" className="w-6 h-6" />
+                    <img
+                        src={themeBtn}
+                        alt="theme button"
+                        className="w-6 h-6 transition-transform duration-1500 ease-in-out group-hover:rotate-720"
+                    />
                 </button>
 
                 <a className="btn rounded-xl text">Sign In</a>

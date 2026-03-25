@@ -4,6 +4,7 @@ import ServicesSection from '../Services/ServicesSection';
 import HowItWorks from '../HowItWorks/HowItWorks';
 import Brands from '../Brands/Brands';
 import Features from '../Features/Features';
+import MerchantCTA from '../MerchantCTA/MerchantCTA';
 
 const Home = () => {
   return (
@@ -12,7 +13,8 @@ const Home = () => {
       <HowItWorks />
       <ServicesSection />
       <Brands />
-      <Features/>
+      <Features />
+      <MerchantCTA />
     </div>
   );
 };

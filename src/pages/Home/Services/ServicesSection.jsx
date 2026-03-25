@@ -21,7 +21,7 @@ const icons = [
 
 const ServicesSection = () => {
     return (
-        <section className="border bg-teal-900 shadow-lg py-16 px-4 md:px-10 rounded-3xl">
+        <section className="border bg-teal-900 shadow-lg py-16 px-4 md:px-10 rounded-4xl">
             <div className="max-w-6xl mx-auto text-center">
                 <h2 className="text-4xl text-white font-bold mb-4">
                     Our Services

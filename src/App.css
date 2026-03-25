@@ -13,3 +13,9 @@
 .actice {
   background: #CAEB66;
 }
+
+.merchantBgImg {
+  background-image: url('../src/assets/be-a-merchant-bg.png');
+  background-repeat: no-repeat;
+  background-position: top;
+}

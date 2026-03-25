@@ -1,6 +1,6 @@
 const FeatureCard = ({ title, description, image }) => {
     return (
-        <div className="flex flex-col md:flex-row items-center p-8 rounded-2xl bg-white gap-6 md:gap-0">
+        <div className="flex flex-col md:flex-row border items-center p-8 rounded-2xl bg-white gap-6 md:gap-0">
             <img
                 src={image}
                 alt={title}

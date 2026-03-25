@@ -6,7 +6,7 @@ import ZapShiftLogo from '../ZapShiftLogo';
 const Footer = () => {
     return (
         <footer className="w-full px-4 pb-10">
-            <div className="max-w-7xl mx-auto bg-[#050505] rounded-[2.5rem] p-10 md:p-16 flex flex-col items-center text-center">
+            <div className="max-w-7xl mx-auto bg-[#050505] rounded-4xl p-10 md:p-16 flex flex-col items-center text-center">
 
                 <div className="mb-6">
                     <ZapShiftLogo textColor="text-white" />

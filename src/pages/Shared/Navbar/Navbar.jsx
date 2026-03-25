@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import ZapShiftLogo from '../ZapShiftLogo';
 import { FaArrowRight } from 'react-icons/fa';
 import themeBtn from "../../../assets/theme-btn.png"
@@ -32,7 +32,7 @@ const Navbar = () => {
     </>
 
     return (
-        <div className="max-w-400 mx-auto navbar rounded-xl shadow-sm py-5 bg-white">
+        <div className="max-w-400 mx-auto navbar rounded-2xl shadow-sm py-5 px-8 bg-white">
             <div className="navbar-start">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -44,7 +44,9 @@ const Navbar = () => {
                         {navItems}
                     </ul>
                 </div>
-                <a className="btn btn-ghost text-xl"><ZapShiftLogo /></a>
+                <Link to="/" className="cursor-pointer">
+                    <ZapShiftLogo />
+                </Link>
             </div>
 
             <div className="navbar-center hidden lg:flex">
@@ -69,7 +71,7 @@ const Navbar = () => {
 
                 <div className="join">
                     <button className="btn join-item rounded-xl text">Sign Up</button>
-                    <button className="btn btn-circle join-item rounded-full -rotate-45 bg-[#1F1F1F] text-[#CAEB66]">
+                    <button className="btn btn-circle join-item rounded-full -rotate-45 bg-black text-lime-400">
                         <FaArrowRight />
                     </button>
                 </div>

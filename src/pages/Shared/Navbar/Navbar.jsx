@@ -5,75 +5,76 @@ import { FaArrowRight } from 'react-icons/fa';
 import themeBtn from "../../../assets/theme-btn.png"
 
 const Navbar = () => {
-
     const themes = ["default", "retro", "valentine"];
     const [themeIndex, setThemeIndex] = useState(0);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme) {
-            document.documentElement.setAttribute("data-theme", savedTheme);
-            setThemeIndex(themes.indexOf(savedTheme));
-        }
+        const savedTheme = localStorage.getItem("theme") || "default";
+        setThemeIndex(themes.indexOf(savedTheme));
     }, []);
 
     const handleThemeChange = () => {
         const nextIndex = (themeIndex + 1) % themes.length;
         const nextTheme = themes[nextIndex];
-
         setThemeIndex(nextIndex);
         document.documentElement.setAttribute("data-theme", nextTheme);
         localStorage.setItem("theme", nextTheme);
     };
 
-    const navItems = <>
-        <li className='font-medium text-base'><NavLink to='/'>Home</NavLink></li>
-        <li className='font-medium text-base'><NavLink to='/about'>About Us</NavLink></li>
-    </>
+    const navItemsDesktop = <>
+        <li><NavLink to='/' className='font-medium text-base'>Home</NavLink></li>
+        <li><NavLink to='/about' className='font-medium text-base'>About Us</NavLink></li>
+        <li><Link to="/signin" className='font-medium text-base'>Sign In</Link></li>
+    </>;
 
     return (
-        <div className="max-w-400 mx-auto navbar rounded-2xl shadow-sm py-5 px-8 bg-white">
-            <div className="navbar-start">
-                <div className="dropdown">
-                    <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+        <div className="mx-auto max-w-360 navbar rounded-2xl shadow-sm py-5 px-4 md:px-8 bg-white relative">
+            <div className="navbar-start flex items-center">
+                <div className="lg:hidden relative">
+                    <button
+                        className="btn btn-ghost"
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h8m-8 6h16"} />
                         </svg>
-                    </div>
-                    <ul tabIndex="-1" className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-                        {navItems}
-                    </ul>
+                    </button>
+                    {isMenuOpen && (
+                        <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow absolute left-0 border border-gray-100">
+                            <li><NavLink to="/" onClick={() => setIsMenuOpen(false)}>Home</NavLink></li>
+                            <li><NavLink to="/about" onClick={() => setIsMenuOpen(false)}>About Us</NavLink></li>
+                            <li><NavLink to="/signin" onClick={() => setIsMenuOpen(false)}>Sign In</NavLink></li>
+                            <li><Link to="/signup"onClick={() => setIsMenuOpen(false)}>Sign Up</Link></li>
+                        </ul>
+                    )}
                 </div>
-                <Link to="/" className="cursor-pointer">
+                <Link to="/" className="cursor-pointer ml-2 lg:ml-0">
                     <ZapShiftLogo />
                 </Link>
             </div>
 
             <div className="navbar-center hidden lg:flex">
-                <ul className="menu menu-horizontal px-1">
-                    {navItems}
+                <ul className="menu menu-horizontal px-1 gap-4">
+                    {navItemsDesktop}
                 </ul>
             </div>
 
-            <div className="navbar-end space-x-4">
+            <div className="navbar-end flex items-center gap-2 md:gap-4">
                 <button
                     onClick={handleThemeChange}
-                    className="group p-2 rounded-full bg-transparent hover:bg-gray-100/50 transition-all duration-300 ease-in-out active:scale-95 hover:shadow-[0_0_15px_rgba(3,55,61,0.2)] border-none cursor-pointer outline-none"
-                >
+                    className="group p-2 rounded-full bg-transparent hover:bg-gray-100/50 transition-all duration-300 ease-in-out active:scale-95 hover:shadow-[0_0_15px_rgba(3,55,61,0.2)] border-none cursor-pointer outline-none" >
                     <img
                         src={themeBtn}
                         alt="theme button"
-                        className="w-6 h-6 transition-transform duration-1500 ease-in-out group-hover:rotate-720"
-                    />
+                        className="w-6 h-6 transition-transform duration-1500 ease-in-out group-hover:rotate-720" />
                 </button>
-
-                <a className="btn rounded-xl text">Sign In</a>
-
-                <div className="join">
-                    <button className="btn join-item rounded-xl text">Sign Up</button>
-                    <button className="btn btn-circle join-item rounded-full -rotate-45 bg-black text-lime-400">
+                <Link to="/signin" className="btn rounded-xl hidden lg:flex">Sign In</Link>
+                <div className="join hidden lg:flex">
+                    <Link to="/signup" className="btn join-item rounded-xl">Sign Up</Link>
+                    <Link to="/signup" className="btn btn-circle join-item rounded-full -rotate-45 bg-black text-lime-400 border-none">
                         <FaArrowRight />
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>

@@ -7,10 +7,12 @@ const RootLayout = () => {
     return (
         <div className='flex flex-col min-h-screen gap-14 my-8'>
             <Navbar />
-            <div className='w-11/12 lg:max-w-7xl mx-auto grow' >
+            <div className='w-11/12 lg:max-w-7xl mx-auto grow'>
                 <Outlet />
             </div>
-            <Footer />
+            <div data-aos="fade-up" data-aos-duration="800">
+                <Footer />
+            </div>
         </div>
     );
 };

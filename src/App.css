@@ -43,3 +43,17 @@
 .review-swiper .swiper-pagination-bullet-active {
   background: #84cc16;
 }
+
+.mySwiper .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: #d1d5db;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.mySwiper .swiper-pagination-bullet-active {
+  background: #a3e635;
+  width: 22px;
+  border-radius: 999px;
+}

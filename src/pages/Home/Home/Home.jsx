@@ -6,6 +6,7 @@ import Brands from '../Brands/Brands';
 import Features from '../Features/Features';
 import MerchantCTA from '../MerchantCTA/MerchantCTA';
 import Review from '../CustomerReview/Review/Review';
+import FAQ from '../FAQ/FAQ';
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
       <Features />
       <MerchantCTA />
       <Review />
+      <FAQ />
     </div>
   );
 };

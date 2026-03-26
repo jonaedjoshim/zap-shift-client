@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "question": "How can I track my parcel in real-time?",
+        "answer": "You can track your parcel instantly using the tracking ID provided after booking. Enter the ID on our tracking page to see live updates and delivery progress."
+    },
+    {
+        "id": 2,
+        "question": "What are ZapShift delivery charges?",
+        "answer": "Delivery charges depend on parcel weight, size, and distance. ZapShift offers competitive pricing and you can estimate cost using our pricing calculator."
+    },
+    {
+        "id": 3,
+        "question": "Do you offer same-day delivery?",
+        "answer": "Yes, ZapShift provides same-day delivery within selected city zones if the order is placed before the daily cutoff time."
+    },
+    {
+        "id": 4,
+        "question": "Which areas do you cover?",
+        "answer": "ZapShift currently covers major cities and expanding rapidly to suburban areas to ensure faster nationwide delivery."
+    },
+    {
+        "id": 5,
+        "question": "What items are restricted?",
+        "answer": "We do not deliver hazardous materials, illegal goods, or improperly packed perishables. Please review our terms for full restrictions."
+    },
+    {
+        "id": 6,
+        "question": "How will I get delivery updates?",
+        "answer": "You will receive SMS and email updates at every step, including pickup, transit, and successful delivery confirmation."
+    },
+    {
+        "id": 7,
+        "question": "Can I cancel or modify my order?",
+        "answer": "Yes, you can cancel or modify your order before dispatch. Once the parcel is out for delivery, changes may not be possible."
+    },
+    {
+        "id": 8,
+        "question": "Do you offer cash on delivery (COD)?",
+        "answer": "Yes, ZapShift supports cash on delivery services for selected locations with secure handling."
+    }
+]

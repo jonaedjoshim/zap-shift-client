@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "Awlad Hossain",
+    "role": "Senior Product Designer",
+    "review": "A posture corrector works by providing support and gentle alignment to your shoulders, back, and spine, encouraging you to maintain proper posture throughout the day."
+  },
+  {
+    "id": 2,
+    "name": "Nasir Uddin",
+    "role": "CEO",
+    "review": "This product completely changed my daily routine. I feel more confident and less pain after using it regularly."
+  },
+  {
+    "id": 3,
+    "name": "Rasel Ahmed",
+    "role": "CTO",
+    "review": "The design is very comfortable and easy to use. I highly recommend it for anyone struggling with posture."
+  },
+  {
+    "id": 4,
+    "name": "Sakib Hasan",
+    "role": "Developer",
+    "review": "I sit for long hours coding, and this helped me maintain a better posture without discomfort."
+  },
+  {
+    "id": 5,
+    "name": "Mizan Rahman",
+    "role": "Entrepreneur",
+    "review": "Very useful product. My back pain has reduced significantly after using this."
+  },
+  {
+    "id": 6,
+    "name": "Tanvir Hossain",
+    "role": "UI Designer",
+    "review": "Simple, effective, and comfortable. Exactly what I needed."
+  },
+  {
+    "id": 7,
+    "name": "Jahid Hasan",
+    "role": "Student",
+    "review": "Helps me sit straight while studying. Great for long study sessions."
+  },
+  {
+    "id": 8,
+    "name": "Arif Khan",
+    "role": "Freelancer",
+    "review": "Amazing product quality and very helpful for daily work routine."
+  },
+  {
+    "id": 9,
+    "name": "Rakibul Islam",
+    "role": "Manager",
+    "review": "My posture improved a lot within a few weeks. Totally worth it."
+  },
+  {
+    "id": 10,
+    "name": "Nayeem Hasan",
+    "role": "Engineer",
+    "review": "Highly recommended. Very comfortable and easy to wear."
+  }
+]

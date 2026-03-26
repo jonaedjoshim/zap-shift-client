@@ -5,6 +5,7 @@ import HowItWorks from '../HowItWorks/HowItWorks';
 import Brands from '../Brands/Brands';
 import Features from '../Features/Features';
 import MerchantCTA from '../MerchantCTA/MerchantCTA';
+import Review from '../CustomerReview/Review/Review';
 
 const Home = () => {
   return (
@@ -15,6 +16,7 @@ const Home = () => {
       <Brands />
       <Features />
       <MerchantCTA />
+      <Review />
     </div>
   );
 };

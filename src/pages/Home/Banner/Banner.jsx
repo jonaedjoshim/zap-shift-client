@@ -27,7 +27,7 @@ const Banner = () => {
             >
                 {banners.map((img, index) => (
                     <SwiperSlide key={index}>
-                        <div className="w-full h-55 sm:h-75 md:h-100 lg:h-[500px]">
+                        <div className="w-full h-55 sm:h-75 md:h-100 lg:h-125">
                             <img
                                 src={img}
                                 alt={`banner-${index}`}

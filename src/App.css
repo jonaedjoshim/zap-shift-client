@@ -21,27 +21,28 @@
 }
 
 .review-swiper .swiper-slide {
-  width: 380px !important;
-  opacity: 0.3;
-  transform: scale(0.85);
-  transition: all 0.5s ease;
-  filter: blur(1px);
+  opacity: 0.4;
+  transform: scale(0.9);
+  transition: all 0.4s ease;
 }
 
 .review-swiper .swiper-slide-active {
   opacity: 1;
-  transform: scale(1) translateY(-30px);
+  transform: scale(1);
   z-index: 10;
-  filter: blur(0);
 }
 
 .review-swiper .swiper-pagination-bullet {
-  background: #ccc;
+  width: 6px;
+  height: 6px;
+  background: #d1d5db;
   opacity: 1;
 }
 
 .review-swiper .swiper-pagination-bullet-active {
   background: #84cc16;
+  width: 16px;
+  border-radius: 999px;
 }
 
 .mySwiper .swiper-pagination-bullet {
@@ -56,4 +57,11 @@
   background: #a3e635;
   width: 22px;
   border-radius: 999px;
+}
+
+.custom-pagination .swiper-pagination-bullet-active {
+  background: #a3e635 !important;
+  width: 24px !important;
+  border-radius: 20px !important;
+  transition: all 0.3s ease;
 }

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendEmailVerification } from "firebase/auth";
 import { auth } from "../../../firebase/firebase.init";
 
 const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
+
     const {
         register,
         handleSubmit,
@@ -17,7 +19,8 @@ const SignUp = () => {
     const onSubmit = (data) => {
         createUserWithEmailAndPassword(auth, data.email, data.password)
             .then((res) => {
-                console.log("User Created:", res.user);
+                sendEmailVerification(res.user);
+                navigate("/auth/signin");
             })
             .catch((err) => {
                 console.log(err.message);
@@ -27,7 +30,9 @@ const SignUp = () => {
     const handleGoogle = () => {
         const provider = new GoogleAuthProvider();
         signInWithPopup(auth, provider)
-            .then((res) => console.log(res.user))
+            .then(() => {
+                navigate("/");
+            })
             .catch((err) => console.log(err.message));
     };
 

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import ZapShiftLogo from '../ZapShiftLogo';
 import { FaArrowRight } from 'react-icons/fa';
-import themeBtn from "../../../assets/theme-btn.png"
+import themeBtn from "../../../assets/theme-btn.png";
+import { AuthContext } from '../../../contexts/AuthContext/AuthContext';
 
 const Navbar = () => {
+    const { user, logOut } = useContext(AuthContext);
     const themes = ["default", "retro", "valentine"];
     const [themeIndex, setThemeIndex] = useState(0);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,14 +24,12 @@ const Navbar = () => {
         localStorage.setItem("theme", nextTheme);
     };
 
-    const navItemsDesktop = <>
-        <li><NavLink to='/' className='font-medium text-base'>Home</NavLink></li>
-        <li><NavLink to='/about' className='font-medium text-base'>About Us</NavLink></li>
-        <li><Link to="/signin" className='font-medium text-base'>Sign In</Link></li>
-    </>;
+    const handleLogout = () => {
+        logOut().catch(() => { });
+    };
 
     return (
-        <div className="mx-auto max-w-360 navbar rounded-2xl shadow-sm py-5 px-4 md:px-8 bg-white relative">
+        <div className="mx-auto max-w-7xl navbar rounded-2xl shadow-sm py-5 px-4 md:px-8 bg-white relative">
             <div className="navbar-start flex items-center">
                 <div className="lg:hidden relative">
                     <button
@@ -40,15 +40,28 @@ const Navbar = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h8m-8 6h16"} />
                         </svg>
                     </button>
+
                     {isMenuOpen && (
                         <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow absolute left-0 border border-gray-100">
                             <li><NavLink to="/" onClick={() => setIsMenuOpen(false)}>Home</NavLink></li>
                             <li><NavLink to="/about" onClick={() => setIsMenuOpen(false)}>About Us</NavLink></li>
-                            <li><NavLink to="/signin" onClick={() => setIsMenuOpen(false)}>Sign In</NavLink></li>
-                            <li><Link to="/signup" onClick={() => setIsMenuOpen(false)}>Sign Up</Link></li>
+
+                            {
+                                user ? (
+                                    <li>
+                                        <button onClick={handleLogout}>Logout</button>
+                                    </li>
+                                ) : (
+                                    <>
+                                        <li><NavLink to="/signin" onClick={() => setIsMenuOpen(false)}>Sign In</NavLink></li>
+                                        <li><NavLink to="/signup" onClick={() => setIsMenuOpen(false)}>Sign Up</NavLink></li>
+                                    </>
+                                )
+                            }
                         </ul>
                     )}
                 </div>
+
                 <Link to="/" className="cursor-pointer ml-2 lg:ml-0">
                     <ZapShiftLogo />
                 </Link>
@@ -56,26 +69,40 @@ const Navbar = () => {
 
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1 gap-4">
-                    {navItemsDesktop}
+                    <li><NavLink to="/" className="font-medium text-base">Home</NavLink></li>
+                    <li><NavLink to="/about" className="font-medium text-base">About Us</NavLink></li>
                 </ul>
             </div>
 
             <div className="navbar-end flex items-center gap-2 md:gap-4">
                 <button
                     onClick={handleThemeChange}
-                    className="group p-2 rounded-full bg-transparent hover:bg-gray-100/50 transition-all duration-300 ease-in-out active:scale-95 hover:shadow-[0_0_15px_rgba(3,55,61,0.2)] border-none cursor-pointer outline-none" >
+                    className="group p-2 rounded-full bg-transparent hover:bg-gray-100/50 transition-all duration-300 ease-in-out active:scale-95 hover:shadow-[0_0_15px_rgba(3,55,61,0.2)] border-none cursor-pointer outline-none"
+                >
                     <img
                         src={themeBtn}
                         alt="theme button"
-                        className="w-6 h-6 transition-transform duration-1500 ease-in-out group-hover:rotate-720" />
+                        className="w-6 h-6 transition-transform duration-1500 ease-in-out group-hover:rotate-720"
+                    />
                 </button>
-                <Link to="/signin" className="btn rounded-xl hidden lg:flex">Sign In</Link>
-                <div className="join hidden lg:flex">
-                    <Link to="/signup" className="btn join-item rounded-xl">Sign Up</Link>
-                    <Link to="/signup" className="btn btn-circle join-item rounded-full -rotate-45 bg-black text-lime-400 border-none">
-                        <FaArrowRight />
-                    </Link>
-                </div>
+
+                {
+                    user ? (
+                        <button onClick={handleLogout} className="btn rounded-xl hidden lg:flex">
+                            Logout
+                        </button>
+                    ) : (
+                        <>
+                            <Link to="/signin" className="btn rounded-xl hidden lg:flex">Sign In</Link>
+                            <div className="join hidden lg:flex">
+                                <Link to="/signup" className="btn join-item rounded-xl">Sign Up</Link>
+                                <Link to="/signup" className="btn btn-circle join-item rounded-full -rotate-45 bg-black text-lime-400 border-none">
+                                    <FaArrowRight />
+                                </Link>
+                            </div>
+                        </>
+                    )
+                }
             </div>
         </div>
     );

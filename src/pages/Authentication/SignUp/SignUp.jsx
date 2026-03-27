@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../../firebase/firebase.init";
 
 const SignUp = () => {
+    const [showPassword, setShowPassword] = useState(false);
     const {
         register,
         handleSubmit,
@@ -11,11 +15,20 @@ const SignUp = () => {
     } = useForm();
 
     const onSubmit = (data) => {
-        console.log("Sign Up Data:", data);
+        createUserWithEmailAndPassword(auth, data.email, data.password)
+            .then((res) => {
+                console.log("User Created:", res.user);
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
     };
 
     const handleGoogle = () => {
-        console.log("Google Sign Up");
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider)
+            .then((res) => console.log(res.user))
+            .catch((err) => console.log(err.message));
     };
 
     return (
@@ -55,25 +68,27 @@ const SignUp = () => {
                             <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
                         )}
                     </div>
-                    <div>
+                    <div className="relative">
                         <label className="block mb-1 text-sm font-medium">Password</label>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Password"
                             {...register("password", {
                                 required: "Password is required",
-                                minLength: {
-                                    value: 6,
-                                    message: "Minimum 6 characters",
-                                },
+                                minLength: { value: 6, message: "Minimum 6 characters" },
                             })}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#CBD5E1]"
                         />
+                        <span
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-9 cursor-pointer text-gray-500"
+                        >
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </span>
                         {errors.password && (
                             <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
                         )}
                     </div>
-
                     <button className="w-full bg-[#CAEB66] hover:bg-lime-500 cursor-pointer text-black font-medium py-2 rounded-md transition">
                         Register
                     </button>

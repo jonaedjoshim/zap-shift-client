@@ -7,7 +7,7 @@ import { AuthContext } from '../../../contexts/AuthContext/AuthContext';
 import toast from 'react-hot-toast';
 
 const Navbar = () => {
-    const { user, logOut } = useContext(AuthContext);
+    const { user, signout } = useContext(AuthContext);
     const navigate = useNavigate();
     const themes = ["default", "retro", "valentine"];
     const [themeIndex, setThemeIndex] = useState(0);
@@ -29,7 +29,7 @@ const Navbar = () => {
     const handleSignOut = () => {
         toast.loading("Signing out...", { id: "signout" });
 
-        logOut()
+        signout()
             .then(() => {
                 toast.success("Signed out successfully", { id: "signout" });
                 navigate("/signin");

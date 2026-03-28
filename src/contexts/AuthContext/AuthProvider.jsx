@@ -18,7 +18,7 @@ const AuthProvider = ({ children }) => {
         return signInWithPopup(auth, provider);
     };
 
-    const logOut = () => {
+    const signout = () => {
         setLoading(true);
         return signOut(auth);
     };
@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
         user,
         loading,
         googleSignIn,
-        logOut,
+        signout,
     };
 
     return (

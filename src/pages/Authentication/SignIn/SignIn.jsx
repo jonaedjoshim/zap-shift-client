@@ -22,15 +22,15 @@ const SignIn = () => {
   } = useForm()
 
   const onSubmit = (data) => {
-    toast.loading("Signing in...", { id: "login" })
+    toast.loading("Signing in...", { id: "signIn" })
 
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(() => {
-        toast.success("Login successful", { id: "login" })
+        toast.success("SignIn successful", { id: "signIn" })
         navigate("/")
       })
       .catch((err) => {
-        let message = "Login failed"
+        let message = "SignIn failed"
 
         if (err.code === "auth/user-not-found") {
           message = "No account found with this email"
@@ -40,7 +40,7 @@ const SignIn = () => {
           message = "Invalid email address"
         }
 
-        toast.error(message, { id: "login" })
+        toast.error(message, { id: "signIn" })
       })
   }
 
@@ -51,11 +51,11 @@ const SignIn = () => {
 
     signInWithPopup(auth, provider)
       .then(() => {
-        toast.success("Login successful", { id: "google" })
+        toast.success("SignIn successful", { id: "google" })
         navigate("/")
       })
       .catch(() => {
-        toast.error("Google login failed", { id: "google" })
+        toast.error("Google signIn failed", { id: "google" })
       })
   }
 

@@ -10,8 +10,9 @@
   font-optical-sizing: auto;
 }
 
-.actice {
+.active {
   background: #CAEB66;
+  border-radius: 9999px;
 }
 
 .merchantBgImg {

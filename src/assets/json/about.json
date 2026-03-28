@@ -1,0 +1,42 @@
+{
+    "heading": "About Us",
+    "slogan": "Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle. From personal packages to business shipments — we deliver on time, every time.",
+    "tabs": [
+        {
+            "id": "story",
+            "title": "Story",
+            "content": [
+                "We started with a simple promise — to make parcel delivery fast, reliable, and completely stress-free for everyone. What began as a small initiative quickly grew into a trusted service used by thousands of customers every day.",
+                "Over the years, we have continuously improved our systems by focusing on real-time tracking, efficient logistics, and a strong customer-first mindset. These efforts have helped us build lasting relationships with both individuals and businesses.",
+                "Whether it's a personal gift or a time-sensitive business shipment, we ensure it reaches its destination safely and on time. Our journey is driven by consistency, trust, and a commitment to delivering excellence."
+            ]
+        },
+        {
+            "id": "mission",
+            "title": "Mission",
+            "content": [
+                "Our mission is to simplify delivery services through smart technology and reliable operations. We aim to remove the common frustrations people face when sending or receiving parcels.",
+                "We are focused on building a seamless delivery experience that is fast, transparent, and dependable. Every feature we develop is designed to make the process easier for our users.",
+                "Customer satisfaction is at the heart of everything we do. We continuously strive to improve our services to meet evolving needs and exceed expectations."
+            ]
+        },
+        {
+            "id": "success",
+            "title": "Success",
+            "content": [
+                "Our journey has been marked by steady growth and the trust of thousands of happy customers. Every successful delivery reflects our dedication and commitment to quality service.",
+                "We have expanded our network and improved our logistics capabilities to ensure faster and more efficient deliveries across multiple regions.",
+                "Our success is not just measured in numbers, but in the satisfaction and confidence our customers place in us every day."
+            ]
+        },
+        {
+            "id": "team",
+            "title": "Team & Others",
+            "content": [
+                "Behind every successful delivery is a team of dedicated professionals working tirelessly to ensure everything runs smoothly. From logistics coordinators to support staff, every member plays a crucial role.",
+                "Our team is driven by passion, innovation, and a shared goal of providing the best delivery experience possible. Collaboration and commitment define our work culture.",
+                "Together, we continue to grow, adapt, and improve — always keeping our customers at the center of everything we do."
+            ]
+        }
+    ]
+}

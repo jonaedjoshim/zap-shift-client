@@ -56,6 +56,7 @@ const Navbar = () => {
                         <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow absolute left-0 border border-gray-100">
                             <li><NavLink to="/" onClick={() => setIsMenuOpen(false)}>Home</NavLink></li>
                             <li><NavLink to="/about" onClick={() => setIsMenuOpen(false)}>About Us</NavLink></li>
+                            <li><NavLink to="/coverage" onClick={() => setIsMenuOpen(false)}>Coverage</NavLink></li>
 
                             {
                                 user ? (
@@ -79,9 +80,10 @@ const Navbar = () => {
             </div>
 
             <div className="navbar-center hidden lg:flex">
-                <ul className="menu menu-horizontal px-1 gap-4">
-                    <li><NavLink to="/" className="font-medium text-base">Home</NavLink></li>
-                    <li><NavLink to="/about" className="font-medium text-base">About Us</NavLink></li>
+                <ul className="menu menu-horizontal px-1">
+                    <li><NavLink to="/" className="font-medium text-[#606060] px-4 btn-circle">Home</NavLink></li>
+                    <li><NavLink to="/about" className="font-medium text-[#606060] px-4 btn-circle">About Us</NavLink></li>
+                    <li><NavLink to="/coverage" className="font-medium text-[#606060] px-4 btn-circle">Coverage</NavLink></li>
                 </ul>
             </div>
 

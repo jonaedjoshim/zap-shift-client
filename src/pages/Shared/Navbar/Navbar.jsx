@@ -7,7 +7,7 @@ import { AuthContext } from '../../../contexts/AuthContext/AuthContext';
 import toast from 'react-hot-toast';
 
 const Navbar = () => {
-    const { user, signout } = useContext(AuthContext);
+    const { user, loading, signout } = useContext(AuthContext);
     const navigate = useNavigate();
     const themes = ["default", "retro", "valentine"];
     const [themeIndex, setThemeIndex] = useState(0);
@@ -39,6 +39,28 @@ const Navbar = () => {
             });
     };
 
+    const renderAuthButtons = () => {
+        if (loading) {
+            return <div className="w-24 h-10 bg-gray-200 rounded-xl animate-pulse hidden lg:flex"></div>
+        }
+
+        if (user) {
+            return <button onClick={handleSignOut} className="btn rounded-xl hidden lg:flex">Sign Out</button>
+        }
+
+        return (
+            <>
+                <Link to="/signin" className="btn rounded-xl hidden lg:flex">Sign In</Link>
+                <div className="join hidden lg:flex">
+                    <Link to="/signup" className="btn join-item rounded-xl">Sign Up</Link>
+                    <Link to="/signup" className="btn btn-circle join-item rounded-full -rotate-45 bg-black text-lime-400 border-none">
+                        <FaArrowRight />
+                    </Link>
+                </div>
+            </>
+        )
+    }
+
     return (
         <div className="mx-auto max-w-7xl navbar rounded-2xl shadow-sm py-5 px-4 md:px-8 bg-white relative">
             <div className="navbar-start flex items-center">
@@ -58,18 +80,16 @@ const Navbar = () => {
                             <li><NavLink to="/about" onClick={() => setIsMenuOpen(false)}>About Us</NavLink></li>
                             <li><NavLink to="/coverage" onClick={() => setIsMenuOpen(false)}>Coverage</NavLink></li>
 
-                            {
-                                user ? (
-                                    <li>
-                                        <button onClick={handleSignOut}>Sign Out</button>
-                                    </li>
-                                ) : (
-                                    <>
-                                        <li><NavLink to="/signin" onClick={() => setIsMenuOpen(false)}>Sign In</NavLink></li>
-                                        <li><NavLink to="/signup" onClick={() => setIsMenuOpen(false)}>Sign Up</NavLink></li>
-                                    </>
-                                )
-                            }
+                            {loading ? (
+                                <li><div className="h-8 bg-gray-200 rounded-xl animate-pulse"></div></li>
+                            ) : user ? (
+                                <li><button onClick={handleSignOut}>Sign Out</button></li>
+                            ) : (
+                                <>
+                                    <li><NavLink to="/signin" onClick={() => setIsMenuOpen(false)}>Sign In</NavLink></li>
+                                    <li><NavLink to="/signup" onClick={() => setIsMenuOpen(false)}>Sign Up</NavLink></li>
+                                </>
+                            )}
                         </ul>
                     )}
                 </div>
@@ -99,23 +119,7 @@ const Navbar = () => {
                     />
                 </button>
 
-                {
-                    user ? (
-                        <button onClick={handleSignOut} className="btn rounded-xl hidden lg:flex">
-                            Sign Out
-                        </button>
-                    ) : (
-                        <>
-                            <Link to="/signin" className="btn rounded-xl hidden lg:flex">Sign In</Link>
-                            <div className="join hidden lg:flex">
-                                <Link to="/signup" className="btn join-item rounded-xl">Sign Up</Link>
-                                <Link to="/signup" className="btn btn-circle join-item rounded-full -rotate-45 bg-black text-lime-400 border-none">
-                                    <FaArrowRight />
-                                </Link>
-                            </div>
-                        </>
-                    )
-                }
+                {renderAuthButtons()}
             </div>
         </div>
     );

@@ -1,39 +1,63 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { FcGoogle } from "react-icons/fc";
-import { Link, useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../../../firebase/firebase.init";
+import React, { useState } from "react"
+import { useForm } from "react-hook-form"
+import { FcGoogle } from "react-icons/fc"
+import { Link, useNavigate } from "react-router-dom"
+import { FaEye, FaEyeSlash } from "react-icons/fa"
+import {
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth"
+import { auth } from "../../../firebase/firebase.init"
+import toast from "react-hot-toast"
 
 const SignIn = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm()
 
   const onSubmit = (data) => {
+    toast.loading("Signing in...", { id: "login" })
+
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(() => {
-        navigate("/");
+        toast.success("Login successful", { id: "login" })
+        navigate("/")
       })
       .catch((err) => {
-        console.log(err.message);
-      });
-  };
+        let message = "Login failed"
+
+        if (err.code === "auth/user-not-found") {
+          message = "No account found with this email"
+        } else if (err.code === "auth/wrong-password") {
+          message = "Incorrect password"
+        } else if (err.code === "auth/invalid-email") {
+          message = "Invalid email address"
+        }
+
+        toast.error(message, { id: "login" })
+      })
+  }
 
   const handleGoogle = () => {
-    const provider = new GoogleAuthProvider();
+    const provider = new GoogleAuthProvider()
+
+    toast.loading("Signing in...", { id: "google" })
+
     signInWithPopup(auth, provider)
       .then(() => {
-        navigate("/");
+        toast.success("Login successful", { id: "google" })
+        navigate("/")
       })
-      .catch((err) => console.log(err.message));
-  };
+      .catch(() => {
+        toast.error("Google login failed", { id: "google" })
+      })
+  }
 
   return (
     <div className="flex items-center justify-center">
@@ -48,10 +72,12 @@ const SignIn = () => {
               type="email"
               placeholder="Email"
               {...register("email", { required: "Email is required" })}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#CBD5E1]"
+              className="w-full px-4 py-2 border rounded-md"
             />
             {errors.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+              <p className="text-red-500 text-xs mt-1">
+                {errors.email.message}
+              </p>
             )}
           </div>
           <div className="relative">
@@ -63,27 +89,29 @@ const SignIn = () => {
                 required: "Password is required",
                 minLength: { value: 6, message: "Minimum 6 characters" },
               })}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#CBD5E1]"
+              className="w-full px-4 py-2 border rounded-md"
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-9 cursor-pointer text-gray-500"
+              className="absolute right-3 top-9 cursor-pointer"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
             {errors.password && (
-              <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
+              <p className="text-red-500 text-xs mt-1">
+                {errors.password.message}
+              </p>
             )}
           </div>
 
-          <button className="w-full bg-[#CAEB66] hover:bg-lime-500 cursor-pointer text-black font-medium py-2 rounded-md transition">
+          <button className="w-full bg-[#CAEB66] py-2 rounded-md">
             Sign In
           </button>
         </form>
 
-        <p className="text-sm text-center mt-4 text-gray-600">
+        <p className="text-sm text-center mt-4">
           Don’t have an account?{" "}
-          <Link to="/signup" className="text-lime-500 font-medium hover:underline">
+          <Link to="/signup" className="text-lime-500">
             Sign Up
           </Link>
         </p>
@@ -96,14 +124,14 @@ const SignIn = () => {
 
         <button
           onClick={handleGoogle}
-          className="w-full flex items-center justify-center gap-2 cursor-pointer py-2 rounded-md bg-gray-200 hover:bg-gray-100 transition"
+          className="w-full flex items-center justify-center gap-2 py-2 rounded-md bg-gray-200"
         >
           <FcGoogle size={20} />
           Sign in with Google
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SignIn;
+export default SignIn

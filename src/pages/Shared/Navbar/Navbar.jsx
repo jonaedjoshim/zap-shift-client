@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import ZapShiftLogo from '../ZapShiftLogo';
 import { FaArrowRight } from 'react-icons/fa';
 import themeBtn from "../../../assets/theme-btn.png";
 import { AuthContext } from '../../../contexts/AuthContext/AuthContext';
+import toast from 'react-hot-toast';
 
 const Navbar = () => {
     const { user, logOut } = useContext(AuthContext);
+    const navigate = useNavigate();
     const themes = ["default", "retro", "valentine"];
     const [themeIndex, setThemeIndex] = useState(0);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,8 +26,17 @@ const Navbar = () => {
         localStorage.setItem("theme", nextTheme);
     };
 
-    const handleLogout = () => {
-        logOut().catch(() => { });
+    const handleSignOut = () => {
+        toast.loading("Signing out...", { id: "signout" });
+
+        logOut()
+            .then(() => {
+                toast.success("Signed out successfully", { id: "signout" });
+                navigate("/signin");
+            })
+            .catch(() => {
+                toast.error("Sign out failed", { id: "signout" });
+            });
     };
 
     return (
@@ -49,7 +60,7 @@ const Navbar = () => {
                             {
                                 user ? (
                                     <li>
-                                        <button onClick={handleLogout}>Logout</button>
+                                        <button onClick={handleSignOut}>Sign Out</button>
                                     </li>
                                 ) : (
                                     <>
@@ -88,8 +99,8 @@ const Navbar = () => {
 
                 {
                     user ? (
-                        <button onClick={handleLogout} className="btn rounded-xl hidden lg:flex">
-                            Logout
+                        <button onClick={handleSignOut} className="btn rounded-xl hidden lg:flex">
+                            Sign Out
                         </button>
                     ) : (
                         <>

@@ -6,6 +6,7 @@ import SignIn from "../pages/Authentication/SignIn/SignIn";
 import SignUp from "../pages/Authentication/SignUp/SignUp";
 import Coverage from "../pages/Coverage/Coverage";
 import AboutUs from "../pages/AboutUs/AboutUs";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
 
 export const router = createBrowserRouter([
     {
@@ -39,5 +40,9 @@ export const router = createBrowserRouter([
                 element: <SignUp />
             },
         ]
+    },
+    {
+        path: '*',
+        element: <ErrorPage />
     }
 ])

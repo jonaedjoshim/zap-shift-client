@@ -10,6 +10,10 @@
   font-optical-sizing: auto;
 }
 
+button {
+  cursor: pointer;
+}
+
 .active {
   background: #CAEB66;
   border-radius: 9999px;

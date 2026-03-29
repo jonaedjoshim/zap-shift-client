@@ -1,5 +1,5 @@
-import React from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import React, { useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import data from "../../assets/json/warehouses.json";
 
@@ -13,7 +13,21 @@ const customIcon = new L.Icon({
     iconAnchor: [12, 41],
 });
 
-const Warehouse = () => {
+const FlyToLocation = ({ location }) => {
+    const map = useMap();
+
+    useEffect(() => {
+        if (location) {
+            map.flyTo([location.latitude, location.longitude], 10, {
+                duration: 1.5,
+            });
+        }
+    }, [location, map]);
+
+    return null;
+};
+
+const Warehouse = ({ selectedLocation }) => {
     return (
         <div className="w-full h-125 rounded-2xl overflow-hidden shadow-md">
             <MapContainer
@@ -30,12 +44,14 @@ const Warehouse = () => {
                 maxBoundsViscosity={1.0}
                 className="w-full h-full"
             >
-                {/* Map tiles */}
                 <TileLayer
                     attribution="© OpenStreetMap contributors"
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    noWrap={false}
+                    noWrap={true}
                 />
+
+                <FlyToLocation location={selectedLocation} />
+
                 {data.map((item, index) => (
                     <Marker
                         key={index}

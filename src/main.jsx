@@ -7,6 +7,7 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import AuthProvider from './contexts/AuthContext/AuthProvider.jsx'
 import { Toaster } from 'react-hot-toast'
+import "leaflet/dist/leaflet.css";
 
 AOS.init({
   duration: 800,

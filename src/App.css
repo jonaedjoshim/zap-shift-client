@@ -70,3 +70,7 @@ button {
   border-radius: 20px !important;
   transition: all 0.3s ease;
 }
+
+.leaflet-control-attribution {
+  display: none !important;
+}

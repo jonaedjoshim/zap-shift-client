@@ -79,6 +79,7 @@ const Navbar = () => {
                             <li><NavLink to="/" onClick={() => setIsMenuOpen(false)}>Home</NavLink></li>
                             <li><NavLink to="/about" onClick={() => setIsMenuOpen(false)}>About Us</NavLink></li>
                             <li><NavLink to="/coverage" onClick={() => setIsMenuOpen(false)}>Coverage</NavLink></li>
+                            <li><NavLink to="/sendParcel" onClick={() => setIsMenuOpen(false)}>Send Parcel</NavLink></li>
 
                             {loading ? (
                                 <li><div className="h-8 bg-gray-200 rounded-xl animate-pulse"></div></li>
@@ -104,6 +105,7 @@ const Navbar = () => {
                     <li><NavLink to="/" className="font-medium text-[#606060] px-4 btn-circle">Home</NavLink></li>
                     <li><NavLink to="/about" className="font-medium text-[#606060] px-4 btn-circle">About Us</NavLink></li>
                     <li><NavLink to="/coverage" className="font-medium text-[#606060] px-4 btn-circle">Coverage</NavLink></li>
+                    <li><NavLink to="/sendParcel" className="font-medium text-[#606060] px-4 btn-circle">Send Parcel</NavLink></li>
                 </ul>
             </div>
 

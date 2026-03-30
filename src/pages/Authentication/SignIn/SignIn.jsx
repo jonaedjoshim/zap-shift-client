@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { FcGoogle } from "react-icons/fc"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
 import {
   signInWithEmailAndPassword,
@@ -14,6 +14,9 @@ import toast from "react-hot-toast"
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const from = location.state?.from?.pathname || "/"
 
   const {
     register,
@@ -27,7 +30,7 @@ const SignIn = () => {
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(() => {
         toast.success("SignIn successful", { id: "signIn" })
-        navigate("/")
+        navigate(from, { replace: true })
       })
       .catch((err) => {
         let message = "SignIn failed"
@@ -52,7 +55,7 @@ const SignIn = () => {
     signInWithPopup(auth, provider)
       .then(() => {
         toast.success("SignIn successful", { id: "google" })
-        navigate("/")
+        navigate(from, { replace: true })
       })
       .catch(() => {
         toast.error("Google signIn failed", { id: "google" })

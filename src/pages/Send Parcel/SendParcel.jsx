@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import 'aos/dist/aos.css';
 import warehouse from '../../assets/json/warehouses.json';
 
 const SendParcel = () => {
     const [parcelType, setParcelType] = useState("document");
-    const { register, handleSubmit, watch } = useForm();
+    const { register, handleSubmit, watch, reset } = useForm();
 
     const senderRegion = watch("senderRegion");
     const receiverRegion = watch("receiverRegion");
@@ -26,9 +27,46 @@ const SendParcel = () => {
             .flatMap(i => i.covered_area);
     }, [receiverRegion]);
 
+    const calculatePrice = (data) => {
+        const base = 50;
+        const weight = Number(data.parcelWeight || 1);
+        return base + weight * 10;
+    };
+
     const onSubmit = (data) => {
-        const finalData = { ...data, parcelType };
-        console.log(finalData);
+        const price = calculatePrice(data);
+
+        toast((t) => (
+            <div className="flex flex-col gap-3">
+                <p className="font-medium">
+                    Delivery Charge: <span className="font-bold">৳{price}</span>
+                </p>
+                <p className="text-sm">Do you want to confirm booking?</p>
+
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => {
+                            toast.dismiss(t.id);
+                            toast.success("Booking Confirmed ✅");
+                            reset();
+                        }}
+                        className="px-3 py-1 bg-lime-500 text-white rounded"
+                    >
+                        Confirm
+                    </button>
+
+                    <button
+                        onClick={() => {
+                            toast.dismiss(t.id);
+                            toast.error("Booking Cancelled ❌");
+                        }}
+                        className="px-3 py-1 bg-red-400 text-white rounded"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        ), { duration: 10000 });
     };
 
     return (
@@ -100,7 +138,6 @@ const SendParcel = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-14 lg:gap-16">
                 <div className="flex flex-col gap-5 md:gap-6" data-aos="fade-right" data-aos-delay="200">
                     <h3 className="text-base md:text-lg font-semibold text-[#1D3531]">Sender Details</h3>
-
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
                         <div className="form-control flex flex-col">
                             <label className="label py-0.5"><span className="text-xs font-medium text-gray-500">Sender Name</span></label>

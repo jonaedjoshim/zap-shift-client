@@ -77,9 +77,9 @@ const Navbar = () => {
                     {isMenuOpen && (
                         <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow absolute left-0 border border-gray-100">
                             <li><NavLink to="/" onClick={() => setIsMenuOpen(false)}>Home</NavLink></li>
-                            <li><NavLink to="/about" onClick={() => setIsMenuOpen(false)}>About Us</NavLink></li>
-                            <li><NavLink to="/coverage" onClick={() => setIsMenuOpen(false)}>Coverage</NavLink></li>
                             <li><NavLink to="/sendParcel" onClick={() => setIsMenuOpen(false)}>Send Parcel</NavLink></li>
+                            <li><NavLink to="/coverage" onClick={() => setIsMenuOpen(false)}>Coverage</NavLink></li>
+                            <li><NavLink to="/about" onClick={() => setIsMenuOpen(false)}>About Us</NavLink></li>
 
                             {loading ? (
                                 <li><div className="h-8 bg-gray-200 rounded-xl animate-pulse"></div></li>
@@ -103,9 +103,9 @@ const Navbar = () => {
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
                     <li><NavLink to="/" className="font-medium text-[#606060] px-4 btn-circle">Home</NavLink></li>
-                    <li><NavLink to="/about" className="font-medium text-[#606060] px-4 btn-circle">About Us</NavLink></li>
-                    <li><NavLink to="/coverage" className="font-medium text-[#606060] px-4 btn-circle">Coverage</NavLink></li>
                     <li><NavLink to="/sendParcel" className="font-medium text-[#606060] px-4 btn-circle">Send Parcel</NavLink></li>
+                    <li><NavLink to="/coverage" className="font-medium text-[#606060] px-4 btn-circle">Coverage</NavLink></li>
+                    <li><NavLink to="/about" className="font-medium text-[#606060] px-4 btn-circle">About Us</NavLink></li>
                 </ul>
             </div>
 

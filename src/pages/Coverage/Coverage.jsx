@@ -6,7 +6,7 @@ const Coverage = () => {
     const [selectedLocation, setSelectedLocation] = useState(null);
 
     return (
-        <div className="p-12 md:p-24 bg-white rounded-3xl">
+        <div className="p-12 md:p-24 bg-white rounded-3xl shadow-lg">
             <h2 className="text-3xl md:text-4xl font-extrabold text-[#1D3531] mb-10">
                 We are available in 64 districts
             </h2>

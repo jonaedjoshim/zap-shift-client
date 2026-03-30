@@ -2,6 +2,7 @@ import React from 'react';
 import { FaLinkedinIn, FaFacebookF, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import ZapShiftLogo from '../ZapShiftLogo';
+import { Link } from 'react-router';
 
 const Footer = () => {
     return (
@@ -19,12 +20,11 @@ const Footer = () => {
                 <div className="w-full border-t border-gray-800/50 mb-8"></div>
 
                 <nav className="flex flex-wrap justify-center gap-6 md:gap-10 text-gray-300 text-sm md:text-base mb-10">
-                    <a href="#" className="hover:text-white transition-colors">Services</a>
-                    <a href="#" className="hover:text-white transition-colors">Coverage</a>
-                    <a href="#" className="hover:text-white transition-colors">About Us</a>
-                    <a href="#" className="hover:text-white transition-colors">Pricing</a>
-                    <a href="#" className="hover:text-white transition-colors">Blog</a>
-                    <a href="#" className="hover:text-white transition-colors">Contact</a>
+                    <Link to="/" className="hover:text-white transition-colors">Home</Link>
+                    <Link to="/coverage" className="hover:text-white transition-colors">Coverage</Link>
+                    <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
+                    <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+                    <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
                 </nav>
 
                 <div className="w-full border-t border-gray-800/50 mb-8"></div>

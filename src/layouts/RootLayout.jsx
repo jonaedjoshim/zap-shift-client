@@ -1,16 +1,21 @@
-import React from 'react';
-import { Outlet } from 'react-router';
-import Navbar from '../pages/Shared/Navbar/Navbar';
-import Footer from '../pages/Shared/Footer/Footer';
+import { Outlet } from "react-router-dom";
+
+import Footer from "../pages/Shared/Footer/Footer";
+import Navbar from "../pages/Shared/Navbar/Navbar";
 
 const RootLayout = () => {
     return (
-        <div className='flex flex-col min-h-screen gap-14 my-8'>
+        <div className="my-8 flex min-h-screen flex-col gap-14">
             <Navbar />
-            <div className='w-11/12 lg:max-w-7xl mx-auto grow'>
+
+            <main className="mx-auto w-11/12 grow lg:max-w-7xl">
                 <Outlet />
-            </div>
-            <div data-aos="fade-up" data-aos-duration="800">
+            </main>
+
+            <div
+                data-aos="fade-up"
+                data-aos-duration="800"
+            >
                 <Footer />
             </div>
         </div>

@@ -1,95 +1,281 @@
-import React, { useState } from "react"
-import { useForm } from "react-hook-form"
-import { FcGoogle } from "react-icons/fc"
-import { Link, useNavigate } from "react-router-dom"
-import { FaEye, FaEyeSlash } from "react-icons/fa"
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendEmailVerification } from "firebase/auth"
-import { auth } from "../../../firebase/firebase.init"
-import toast from "react-hot-toast"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import {
+    Link,
+    useNavigate,
+} from "react-router-dom";
+import toast from "react-hot-toast";
+
+import useAuth from "../../../hooks/useAuth";
 
 const SignUp = () => {
-    const [showPassword, setShowPassword] = useState(false)
-    const navigate = useNavigate()
-    const { register, handleSubmit, formState: { errors } } = useForm()
+    const [showPassword, setShowPassword] =
+        useState(false);
 
-    const onSubmit = (data) => {
-        toast.loading("Signing up...", { id: "signup" })
+    const navigate = useNavigate();
 
-        createUserWithEmailAndPassword(auth, data.email, data.password)
-            .then((res) => {
-                sendEmailVerification(res.user)
-                toast.success("Sign up successful", { id: "signup" })
-                navigate("/")
-            })
-            .catch((err) => {
-                let message = "Sign up failed"
-                if (err.code === "auth/email-already-in-use") message = "Email already in use"
-                toast.error(message, { id: "signup" })
-            })
-    }
+    const {
+        createUser,
+        googleSignIn,
+        updateUserProfile,
+        verifyEmail,
+    } = useAuth();
 
-    const handleGoogle = () => {
-        const provider = new GoogleAuthProvider()
-        toast.loading("Signing up with Google...", { id: "google" })
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
 
-        signInWithPopup(auth, provider)
-            .then(() => {
-                toast.success("Sign up successful", { id: "google" })
-                navigate("/")
-            })
-            .catch(() => {
-                toast.error("Google sign up failed", { id: "google" })
-            })
-    }
+    const onSubmit = async (data) => {
+        const toastId = toast.loading(
+            "Creating your account..."
+        );
+
+        try {
+            await createUser(
+                data.email,
+                data.password
+            );
+
+            await updateUserProfile({
+                displayName: data.name,
+            });
+
+            await verifyEmail();
+
+            toast.success(
+                "Account created. Please verify your email.",
+                { id: toastId }
+            );
+
+            navigate("/");
+        } catch (error) {
+            let message =
+                "Unable to create your account.";
+
+            if (
+                error.code ===
+                "auth/email-already-in-use"
+            ) {
+                message =
+                    "An account already exists with this email.";
+            } else if (
+                error.code === "auth/invalid-email"
+            ) {
+                message =
+                    "Please enter a valid email address.";
+            } else if (
+                error.code === "auth/weak-password"
+            ) {
+                message =
+                    "Please choose a stronger password.";
+            }
+
+            toast.error(message, {
+                id: toastId,
+            });
+        }
+    };
+
+    const handleGoogle = async () => {
+        const toastId = toast.loading(
+            "Signing up with Google..."
+        );
+
+        try {
+            await googleSignIn();
+
+            toast.success(
+                "Signed in successfully.",
+                { id: toastId }
+            );
+
+            navigate("/");
+        } catch {
+            toast.error(
+                "Google sign up failed.",
+                { id: toastId }
+            );
+        }
+    };
 
     return (
         <div className="flex items-center justify-center">
-            <div className="w-full max-w-md bg-white p-8 rounded-xl">
-                <h1 className="text-4xl font-bold mb-2">Create an Account</h1>
-                <p className="text-gray-500 mb-6">Register with ZapShift</p>
+            <div className="w-full max-w-md rounded-xl bg-white p-8">
+                <h1 className="mb-2 text-4xl font-bold">
+                    Create an Account
+                </h1>
 
-                <div className="flex justify-items-start mb-4">
-                    <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-xl">👤</span>
-                    </div>
-                </div>
-
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                    <div>
-                        <label className="block mb-1 text-sm font-medium">Name</label>
-                        <input type="text" placeholder="Name" {...register("name", { required: "Name is required" })} className="w-full px-4 py-2 border rounded-md" />
-                        {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
-                    </div>
-                    <div>
-                        <label className="block mb-1 text-sm font-medium">Email</label>
-                        <input type="email" placeholder="Email" {...register("email", { required: "Email is required" })} className="w-full px-4 py-2 border rounded-md" />
-                        {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
-                    </div>
-                    <div className="relative">
-                        <label className="block mb-1 text-sm font-medium">Password</label>
-                        <input type={showPassword ? "text" : "password"} placeholder="Password" {...register("password", { required: "Password is required", minLength: { value: 6, message: "Minimum 6 characters" } })} className="w-full px-4 py-2 border rounded-md" />
-                        <span onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-9 cursor-pointer text-gray-500">{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
-                        {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
-                    </div>
-                    <button className="w-full bg-[#CAEB66] hover:bg-lime-500 cursor-pointer text-black font-medium py-2 rounded-md transition">Register</button>
-                </form>
-
-                <p className="text-sm text-center mt-4 text-gray-600">
-                    Already have an account? <Link to="/signin" className="text-lime-500 font-medium hover:underline">Sign In</Link>
+                <p className="mb-6 text-gray-500">
+                    Register with ZapShift
                 </p>
 
-                <div className="flex items-center my-5">
-                    <div className="grow h-px bg-gray-300"></div>
-                    <span className="px-3 text-sm text-gray-400">Or</span>
-                    <div className="grow h-px bg-gray-300"></div>
+                <div className="mb-4 flex justify-start">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-200">
+                        <span className="text-xl">
+                            👤
+                        </span>
+                    </div>
                 </div>
 
-                <button onClick={handleGoogle} className="w-full flex items-center justify-center gap-2 cursor-pointer py-2 rounded-md bg-gray-200 hover:bg-gray-100 transition">
-                    <FcGoogle size={20} /> Sign Up with Google
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="space-y-4"
+                >
+                    <div>
+                        <label
+                            htmlFor="name"
+                            className="mb-1 block text-sm font-medium"
+                        >
+                            Name
+                        </label>
+
+                        <input
+                            id="name"
+                            type="text"
+                            placeholder="Name"
+                            autoComplete="name"
+                            {...register("name", {
+                                required:
+                                    "Name is required",
+                            })}
+                            className="w-full rounded-md border px-4 py-2"
+                        />
+
+                        {errors.name && (
+                            <p className="mt-1 text-xs text-red-500">
+                                {errors.name.message}
+                            </p>
+                        )}
+                    </div>
+
+                    <div>
+                        <label
+                            htmlFor="email"
+                            className="mb-1 block text-sm font-medium"
+                        >
+                            Email
+                        </label>
+
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="Email"
+                            autoComplete="email"
+                            {...register("email", {
+                                required:
+                                    "Email is required",
+                            })}
+                            className="w-full rounded-md border px-4 py-2"
+                        />
+
+                        {errors.email && (
+                            <p className="mt-1 text-xs text-red-500">
+                                {errors.email.message}
+                            </p>
+                        )}
+                    </div>
+
+                    <div>
+                        <label
+                            htmlFor="password"
+                            className="mb-1 block text-sm font-medium"
+                        >
+                            Password
+                        </label>
+
+                        <div className="relative">
+                            <input
+                                id="password"
+                                type={
+                                    showPassword
+                                        ? "text"
+                                        : "password"
+                                }
+                                placeholder="Password"
+                                autoComplete="new-password"
+                                {...register("password", {
+                                    required:
+                                        "Password is required",
+                                    minLength: {
+                                        value: 6,
+                                        message:
+                                            "Minimum 6 characters",
+                                    },
+                                })}
+                                className="w-full rounded-md border px-4 py-2 pr-11"
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setShowPassword(
+                                        (previous) =>
+                                            !previous
+                                    )
+                                }
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                                aria-label={
+                                    showPassword
+                                        ? "Hide password"
+                                        : "Show password"
+                                }
+                            >
+                                {showPassword ? (
+                                    <FaEyeSlash />
+                                ) : (
+                                    <FaEye />
+                                )}
+                            </button>
+                        </div>
+
+                        {errors.password && (
+                            <p className="mt-1 text-xs text-red-500">
+                                {errors.password.message}
+                            </p>
+                        )}
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="w-full rounded-md bg-[#CAEB66] py-2 font-medium text-black transition hover:bg-lime-400"
+                    >
+                        Register
+                    </button>
+                </form>
+
+                <p className="mt-4 text-center text-sm text-gray-600">
+                    Already have an account?{" "}
+                    <Link
+                        to="/signin"
+                        className="font-medium text-lime-600"
+                    >
+                        Login
+                    </Link>
+                </p>
+
+                <div className="my-5 flex items-center">
+                    <div className="h-px grow bg-gray-300" />
+                    <span className="px-3 text-sm text-gray-400">
+                        Or
+                    </span>
+                    <div className="h-px grow bg-gray-300" />
+                </div>
+
+                <button
+                    type="button"
+                    onClick={handleGoogle}
+                    className="flex w-full items-center justify-center gap-2 rounded-md bg-gray-200 py-2 transition hover:bg-gray-100"
+                >
+                    <FcGoogle size={20} />
+                    Register with Google
                 </button>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default SignUp
+export default SignUp;

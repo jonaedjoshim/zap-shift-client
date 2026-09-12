@@ -1,41 +1,104 @@
-import React, { useEffect, useState } from "react";
-import { AuthContext } from "./AuthContext";
+import { useEffect, useState } from "react";
 import {
-    onAuthStateChanged,
-    signOut,
+    createUserWithEmailAndPassword,
     GoogleAuthProvider,
+    onAuthStateChanged,
+    sendEmailVerification,
+    signInWithEmailAndPassword,
     signInWithPopup,
+    signOut,
+    updateProfile,
 } from "firebase/auth";
+
 import { auth } from "../../firebase/firebase.init";
+import { AuthContext } from "./AuthContext";
+
+const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const googleSignIn = () => {
-        const provider = new GoogleAuthProvider();
+    const createUser = (email, password) => {
         setLoading(true);
-        return signInWithPopup(auth, provider);
+
+        return createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+    };
+
+    const signInUser = (email, password) => {
+        setLoading(true);
+
+        return signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+    };
+
+    const googleSignIn = () => {
+        setLoading(true);
+
+        return signInWithPopup(
+            auth,
+            googleProvider
+        );
+    };
+
+    const updateUserProfile = (profile) => {
+        if (!auth.currentUser) {
+            return Promise.reject(
+                new Error("No authenticated user found.")
+            );
+        }
+
+        return updateProfile(
+            auth.currentUser,
+            profile
+        );
+    };
+
+    const verifyEmail = () => {
+        if (!auth.currentUser) {
+            return Promise.reject(
+                new Error("No authenticated user found.")
+            );
+        }
+
+        return sendEmailVerification(
+            auth.currentUser
+        );
     };
 
     const signout = () => {
         setLoading(true);
+
         return signOut(auth);
     };
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-            setLoading(false);
-        });
+        const unsubscribe = onAuthStateChanged(
+            auth,
+            (currentUser) => {
+                setUser(currentUser);
+                setLoading(false);
+            }
+        );
 
-        return () => unsubscribe();
+        return unsubscribe;
     }, []);
 
     const authInfo = {
         user,
         loading,
+        createUser,
+        signInUser,
         googleSignIn,
+        updateUserProfile,
+        verifyEmail,
         signout,
     };
 

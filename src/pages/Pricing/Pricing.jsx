@@ -13,9 +13,7 @@ const Pricing = () => {
     const regions = useMemo(() => {
         return [
             ...new Set(
-                warehouse.map(
-                    (item) => item.region
-                )
+                warehouse.map((item) => item.region)
             ),
         ];
     }, []);
@@ -54,31 +52,161 @@ const Pricing = () => {
 
     return (
         <section className="rounded-3xl bg-white p-6 shadow-sm md:p-10 lg:p-16">
-            {/* Heading */}
-            <div className="border-b border-gray-200 pb-8">
+
+            {/* Page Heading */}
+            <div>
                 <h1 className="text-3xl font-bold text-[#03373D] md:text-4xl">
                     Pricing Calculator
                 </h1>
 
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-500 md:text-base">
-                    Calculate your estimated parcel delivery
-                    charge based on parcel type, weight, and
-                    delivery location.
+                    Check our delivery charges and calculate
+                    the estimated cost of sending your parcel.
                 </p>
             </div>
 
-            <div className="py-10 md:py-14">
+            {/* Pricing Rules */}
+            <div className="mt-8">
+                <h2 className="text-xl font-bold text-[#03373D] md:text-2xl">
+                    Delivery Pricing
+                </h2>
+
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-500">
+                    Our delivery charge depends on the parcel
+                    type, weight, and delivery destination.
+                </p>
+
+                <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+
+                    {/* Document */}
+                    <div className="rounded-2xl border border-gray-200 bg-[#F9FAFB] p-5">
+                        <div className="mb-4 flex items-center justify-between gap-3">
+                            <h3 className="font-bold text-[#03373D]">
+                                Document
+                            </h3>
+
+                            <span className="rounded-full bg-lime-100 px-3 py-1 text-xs font-semibold text-[#65782C]">
+                                Any Weight
+                            </span>
+                        </div>
+
+                        <div className="space-y-3 text-sm">
+                            <div className="flex items-center justify-between">
+                                <span className="text-gray-500">
+                                    Within City
+                                </span>
+
+                                <span className="font-bold text-gray-900">
+                                    ৳60
+                                </span>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                                <span className="text-gray-500">
+                                    Outside City
+                                </span>
+
+                                <span className="font-bold text-gray-900">
+                                    ৳80
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Non Document <= 3kg */}
+                    <div className="rounded-2xl border border-gray-200 bg-[#F9FAFB] p-5">
+                        <div className="mb-4 flex items-center justify-between gap-3">
+                            <h3 className="font-bold text-[#03373D]">
+                                Non-Document
+                            </h3>
+
+                            <span className="rounded-full bg-lime-100 px-3 py-1 text-xs font-semibold text-[#65782C]">
+                                Up to 3 KG
+                            </span>
+                        </div>
+
+                        <div className="space-y-3 text-sm">
+                            <div className="flex items-center justify-between">
+                                <span className="text-gray-500">
+                                    Within City
+                                </span>
+
+                                <span className="font-bold text-gray-900">
+                                    ৳110
+                                </span>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                                <span className="text-gray-500">
+                                    Outside City
+                                </span>
+
+                                <span className="font-bold text-gray-900">
+                                    ৳150
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Non Document > 3kg */}
+                    <div className="rounded-2xl border border-[#C6E871] bg-[#F8FDEB] p-5">
+                        <div className="mb-4 flex items-center justify-between gap-3">
+                            <h3 className="font-bold text-[#03373D]">
+                                Non-Document
+                            </h3>
+
+                            <span className="rounded-full bg-[#C6E871] px-3 py-1 text-xs font-semibold text-[#34400F]">
+                                Above 3 KG
+                            </span>
+                        </div>
+
+                        <div className="space-y-3 text-sm">
+                            <div>
+                                <p className="text-gray-500">
+                                    Additional Weight
+                                </p>
+
+                                <p className="mt-1 font-bold text-gray-900">
+                                    + ৳40 / KG
+                                </p>
+                            </div>
+
+                            <div>
+                                <p className="text-gray-500">
+                                    Outside City
+                                </p>
+
+                                <p className="mt-1 font-bold text-gray-900">
+                                    + ৳40 Extra
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p className="mt-5 text-xs leading-5 text-gray-400">
+                    * The calculator provides an estimated
+                    delivery charge. Final pricing may depend
+                    on the service area and delivery zone.
+                </p>
+            </div>
+
+            {/* Divider */}
+            <div className="my-10 border-t border-gray-200 md:my-12" />
+
+            {/* Calculator */}
+            <div>
                 <h2 className="mb-8 text-center text-xl font-bold text-[#03373D] md:text-2xl">
                     Calculate Your Cost
                 </h2>
 
                 <div className="mx-auto grid max-w-4xl items-center gap-10 md:grid-cols-2 md:gap-16">
-                    {/* Calculator Form */}
+
+                    {/* Form */}
                     <form
                         onSubmit={handleCalculate}
                         className="space-y-5"
                     >
-                        {/* Parcel Type */}
                         <div>
                             <label
                                 htmlFor="parcelType"
@@ -90,9 +218,7 @@ const Pricing = () => {
                             <select
                                 id="parcelType"
                                 value={parcelType}
-                                onChange={
-                                    handleParcelTypeChange
-                                }
+                                onChange={handleParcelTypeChange}
                                 required
                                 className="select select-bordered h-11 min-h-11 w-full border-gray-200 bg-[#F9FAFB] focus:border-[#C6E871] focus:outline-none"
                             >
@@ -110,7 +236,6 @@ const Pricing = () => {
                             </select>
                         </div>
 
-                        {/* Sender Region */}
                         <div>
                             <label
                                 htmlFor="senderRegion"
@@ -146,7 +271,6 @@ const Pricing = () => {
                             </select>
                         </div>
 
-                        {/* Receiver Region */}
                         <div>
                             <label
                                 htmlFor="receiverRegion"
@@ -182,7 +306,6 @@ const Pricing = () => {
                             </select>
                         </div>
 
-                        {/* Weight */}
                         {parcelType === "non-document" && (
                             <div>
                                 <label
@@ -211,7 +334,6 @@ const Pricing = () => {
                             </div>
                         )}
 
-                        {/* Buttons */}
                         <div className="flex gap-3 pt-2">
                             <button
                                 type="button"
@@ -230,7 +352,7 @@ const Pricing = () => {
                         </div>
                     </form>
 
-                    {/* Cost Result */}
+                    {/* Result */}
                     <div className="flex min-h-48 items-center justify-center rounded-2xl bg-[#F9FAFB] p-6 md:bg-transparent">
                         {cost !== null ? (
                             <div className="text-center">

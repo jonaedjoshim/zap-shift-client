@@ -23,11 +23,6 @@
     }
 }
 
-.active {
-    background: #caeb66;
-    border-radius: 9999px;
-}
-
 .merchantBgImg {
     background-image: url("./assets/be-a-merchant-bg.png");
     background-repeat: no-repeat;

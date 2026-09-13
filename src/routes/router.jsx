@@ -4,6 +4,7 @@ import AuthLayout from "../layouts/AuthLayout";
 import RootLayout from "../layouts/RootLayout";
 
 import AboutUs from "../pages/AboutUs/AboutUs";
+import ForgotPassword from "../pages/Authentication/ForgotPassword/ForgotPassword";
 import SignIn from "../pages/Authentication/SignIn/SignIn";
 import SignUp from "../pages/Authentication/SignUp/SignUp";
 import Coverage from "../pages/Coverage/Coverage";
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
             {
                 path: "signup",
                 element: <SignUp />,
+            },
+            {
+                path: "forgot-password",
+                element: <ForgotPassword />,
             },
         ],
     },

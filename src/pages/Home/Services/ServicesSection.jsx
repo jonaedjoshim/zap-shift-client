@@ -1,14 +1,14 @@
-import ServiceCard from "./ServiceCard";
-import services from "../../../data/services.json";
-
 import {
-    FaShippingFast,
-    FaGlobeAsia,
     FaBoxOpen,
-    FaMoneyBillWave,
     FaBuilding,
+    FaGlobeAsia,
+    FaMoneyBillWave,
+    FaShippingFast,
     FaUndo,
 } from "react-icons/fa";
+
+import services from "../../../data/services.json";
+import ServiceCard from "./ServiceCard";
 
 const icons = [
     FaShippingFast,
@@ -21,22 +21,45 @@ const icons = [
 
 const ServicesSection = () => {
     return (
-        <section className="border bg-teal-900 shadow-lg py-16 px-4 md:px-10 rounded-4xl">
-            <div className="max-w-6xl mx-auto text-center">
-                <h2 className="text-4xl text-white font-bold mb-4">
-                    Our Services
-                </h2>
-                <p className="text-base opacity-80 text-white max-w-2xl mx-auto mb-12">
-                    Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {services.map((service, index) => (
-                        <ServiceCard
-                            key={index}
-                            service={service}
-                            Icon={icons[index]}
-                        />
-                    ))}
+        <section className="rounded-4xl bg-[#03373D] px-4 py-12 shadow-lg md:px-10 md:py-16">
+            <div className="mx-auto max-w-6xl">
+                <div className="mx-auto mb-10 max-w-2xl text-center">
+                    <h2 className="text-3xl font-bold text-white md:text-4xl">
+                        Our Services
+                    </h2>
+
+                    <p className="mt-3 text-sm leading-6 text-gray-300 md:text-base">
+                        Reliable delivery
+                        solutions designed for
+                        personal parcels,
+                        businesses, and
+                        nationwide shipments.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {services.map(
+                        (
+                            service,
+                            index
+                        ) => (
+                            <ServiceCard
+                                key={
+                                    service.id ??
+                                    service.title
+                                }
+                                service={
+                                    service
+                                }
+                                Icon={
+                                    icons[
+                                    index %
+                                    icons.length
+                                    ]
+                                }
+                            />
+                        )
+                    )}
                 </div>
             </div>
         </section>

@@ -1,5 +1,11 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination } from "swiper/modules";
+import {
+    Swiper,
+    SwiperSlide,
+} from "swiper/react";
+import {
+    Autoplay,
+    Pagination,
+} from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -8,36 +14,71 @@ import bannerImg1 from "../../../assets/banner/banner1.png";
 import bannerImg2 from "../../../assets/banner/banner2.png";
 import bannerImg3 from "../../../assets/banner/banner3.png";
 
+const banners = [
+    {
+        id: 1,
+        image: bannerImg1,
+        alt: "Fast parcel delivery and easy pickup service",
+    },
+    {
+        id: 2,
+        image: bannerImg2,
+        alt: "Quick doorstep parcel delivery service",
+    },
+    {
+        id: 3,
+        image: bannerImg3,
+        alt: "Reliable nationwide parcel delivery",
+    },
+];
+
 const Banner = () => {
-    const banners = [bannerImg1, bannerImg2, bannerImg3];
     return (
-        <div className="w-full max-w-7xl mx-auto rounded-3xl overflow-hidden shadow-xl">
+        <section
+            className="mx-auto w-full max-w-7xl overflow-hidden rounded-3xl bg-white shadow-sm"
+            aria-label="Delivery highlights"
+        >
             <Swiper
-                modules={[Autoplay, Pagination]}
-                loop={true}
+                modules={[
+                    Autoplay,
+                    Pagination,
+                ]}
+                loop
                 speed={800}
                 autoplay={{
-                    delay: 2500,
-                    disableOnInteraction: false,
+                    delay: 3500,
+                    disableOnInteraction:
+                        false,
+                    pauseOnMouseEnter: true,
                 }}
                 pagination={{
                     clickable: true,
                 }}
                 className="mySwiper"
             >
-                {banners.map((img, index) => (
-                    <SwiperSlide key={index}>
-                        <div className="w-full h-55 sm:h-75 md:h-100 lg:h-125">
-                            <img
-                                src={img}
-                                alt={`banner-${index}`}
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                    </SwiperSlide>
-                ))}
+                {banners.map(
+                    (banner) => (
+                        <SwiperSlide
+                            key={
+                                banner.id
+                            }
+                        >
+                            <div className="h-55 w-full sm:h-75 md:h-100 lg:h-125">
+                                <img
+                                    src={
+                                        banner.image
+                                    }
+                                    alt={
+                                        banner.alt
+                                    }
+                                    className="h-full w-full object-cover"
+                                />
+                            </div>
+                        </SwiperSlide>
+                    )
+                )}
             </Swiper>
-        </div>
+        </section>
     );
 };
 

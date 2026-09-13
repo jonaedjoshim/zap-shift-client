@@ -10,6 +10,7 @@ import SignUp from "../pages/Authentication/SignUp/SignUp";
 import Coverage from "../pages/Coverage/Coverage";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Home from "../pages/Home/Home/Home";
+import Pricing from "../pages/Pricing/Pricing";
 import SendParcel from "../pages/Send Parcel/SendParcel";
 
 import PrivateRoute from "./PrivateRoute";
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
             {
                 path: "coverage",
                 element: <Coverage />,
+            },
+            {
+                path: "pricing",
+                element: <Pricing />,
             },
             {
                 path: "sendParcel",

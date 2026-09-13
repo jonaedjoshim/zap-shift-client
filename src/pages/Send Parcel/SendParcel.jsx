@@ -4,10 +4,10 @@ import Swal from "sweetalert2";
 
 import warehouse from "../../assets/json/warehouses.json";
 import useAuth from "../../hooks/useAuth";
+import { calculateParcelCost } from "../../utils/calculateParcelCost";
 
 const SendParcel = () => {
     const [parcelType, setParcelType] = useState("document");
-
     const { user } = useAuth();
 
     const {
@@ -74,48 +74,6 @@ const SendParcel = () => {
             .flatMap((item) => item.covered_area);
     }, [receiverRegion]);
 
-    const calculateCost = (data) => {
-        const isDocument =
-            parcelType === "document";
-
-        const isWithinRegion =
-            data.senderRegion ===
-            data.receiverRegion;
-
-        if (isDocument) {
-            return isWithinRegion ? 60 : 80;
-        }
-
-        const weight = Number(
-            data.parcelWeight
-        );
-
-        if (
-            !Number.isFinite(weight) ||
-            weight <= 0
-        ) {
-            return null;
-        }
-
-        if (weight <= 3) {
-            return isWithinRegion ? 110 : 150;
-        }
-
-        const extraWeight = weight - 3;
-        const extraWeightCharge =
-            extraWeight * 40;
-
-        if (isWithinRegion) {
-            return 110 + extraWeightCharge;
-        }
-
-        return (
-            150 +
-            extraWeightCharge +
-            40
-        );
-    };
-
     const handleParcelTypeChange = (type) => {
         setParcelType(type);
 
@@ -124,16 +82,19 @@ const SendParcel = () => {
         }
     };
 
-    const handleConfirmBooking = async (
-        data
-    ) => {
-        const cost = calculateCost(data);
+    const handleConfirmBooking = async (data) => {
+        const cost = calculateParcelCost({
+            parcelType,
+            weight: data.parcelWeight,
+            senderRegion: data.senderRegion,
+            receiverRegion: data.receiverRegion,
+        });
 
         if (cost === null) {
             await Swal.fire({
                 icon: "error",
-                title: "Invalid Weight",
-                text: "Please enter a valid parcel weight.",
+                title: "Unable to Calculate Cost",
+                text: "Please check the parcel information and try again.",
                 confirmButtonColor: "#C6E871",
             });
 
@@ -148,10 +109,8 @@ const SendParcel = () => {
                     ? null
                     : Number(data.parcelWeight),
             cost,
-            createdBy:
-                user?.email || null,
-            createdAt:
-                new Date().toISOString(),
+            createdBy: user?.email || null,
+            createdAt: new Date().toISOString(),
             paymentStatus: "unpaid",
             deliveryStatus: "pending",
         };
@@ -163,8 +122,7 @@ const SendParcel = () => {
             showCancelButton: true,
             confirmButtonColor: "#C6E871",
             cancelButtonColor: "#d33",
-            confirmButtonText:
-                "Confirm Booking",
+            confirmButtonText: "Confirm Booking",
         });
 
         if (!result.isConfirmed) {
@@ -172,18 +130,10 @@ const SendParcel = () => {
         }
 
         /*
-         * Backend integration will be added later.
+         * Backend integration will be connected later.
          *
-         * Future flow:
-         *
-         * const response =
-         *     await axiosSecure.post(
-         *         "/parcels",
-         *         parcelData
-         *     );
-         *
-         * After successful creation:
-         * navigate("/dashboard/my-parcels");
+         * Future:
+         * POST /parcels
          */
 
         console.log(
@@ -194,13 +144,12 @@ const SendParcel = () => {
         await Swal.fire({
             icon: "success",
             title: "Parcel Information Ready",
-            text: "The parcel has been prepared successfully. Database submission will be connected with the backend.",
+            text: "The parcel information is ready. Database submission will be connected with the backend.",
             confirmButtonColor: "#C6E871",
         });
 
         reset({
-            senderName:
-                user?.displayName || "",
+            senderName: user?.displayName || "",
             senderContact: "",
             senderAddress: "",
             senderRegion: "",
@@ -231,131 +180,137 @@ const SendParcel = () => {
         name,
         type = "text",
         required = true,
-    }) => (
-        <div className="form-control flex flex-col">
-            <label
-                htmlFor={name}
-                className="label py-0.5"
-            >
-                <span className="text-xs font-medium text-gray-500">
-                    {label}
-                </span>
-            </label>
+    }) => {
+        return (
+            <div className="form-control flex flex-col">
+                <label
+                    htmlFor={name}
+                    className="label py-0.5"
+                >
+                    <span className="text-xs font-medium text-gray-500">
+                        {label}
+                    </span>
+                </label>
 
-            <input
-                id={name}
-                type={type}
-                step={
-                    type === "number"
-                        ? "0.1"
-                        : undefined
-                }
-                min={
-                    type === "number"
-                        ? "0.1"
-                        : undefined
-                }
-                {...register(name, {
-                    required: required
-                        ? `${label} is required`
-                        : false,
-                    ...(type === "number" &&
-                        required
-                        ? {
-                            min: {
-                                value: 0.1,
-                                message:
-                                    "Weight must be greater than 0",
-                            },
-                        }
-                        : {}),
-                })}
-                placeholder={label}
-                className="input input-bordered h-11 w-full border-gray-200 bg-[#F9FAFB] focus:border-[#C6E871] focus:outline-none focus:ring-1 focus:ring-[#C6E871]"
-            />
+                <input
+                    id={name}
+                    type={type}
+                    step={
+                        type === "number"
+                            ? "0.1"
+                            : undefined
+                    }
+                    min={
+                        type === "number"
+                            ? "0.1"
+                            : undefined
+                    }
+                    {...register(name, {
+                        required: required
+                            ? `${label} is required`
+                            : false,
 
-            {errors[name] && (
-                <span className="mt-1 text-xs text-red-500">
-                    {errors[name].message}
-                </span>
-            )}
-        </div>
-    );
+                        ...(type === "number" && required
+                            ? {
+                                min: {
+                                    value: 0.1,
+                                    message:
+                                        "Weight must be greater than 0",
+                                },
+                            }
+                            : {}),
+                    })}
+                    placeholder={label}
+                    className="input input-bordered h-11 w-full border-gray-200 bg-[#F9FAFB] focus:border-[#C6E871] focus:outline-none focus:ring-1 focus:ring-[#C6E871]"
+                />
+
+                {errors[name] && (
+                    <span className="mt-1 text-xs text-red-500">
+                        {errors[name].message}
+                    </span>
+                )}
+            </div>
+        );
+    };
 
     const SelectSection = ({
         label,
         name,
         options,
-    }) => (
-        <div className="form-control flex w-full flex-col">
-            <label
-                htmlFor={name}
-                className="label py-0.5"
-            >
-                <span className="text-xs font-medium text-gray-500">
-                    {label}
-                </span>
-            </label>
+    }) => {
+        return (
+            <div className="form-control flex w-full flex-col">
+                <label
+                    htmlFor={name}
+                    className="label py-0.5"
+                >
+                    <span className="text-xs font-medium text-gray-500">
+                        {label}
+                    </span>
+                </label>
 
-            <select
-                id={name}
-                {...register(name, {
-                    required: `${label} is required`,
-                })}
-                className="select select-bordered h-11 min-h-11 w-full border-gray-200 bg-[#F9FAFB] font-normal focus:border-[#C6E871] focus:outline-none focus:ring-1 focus:ring-[#C6E871]"
-            >
-                <option value="">
-                    Select {label}
-                </option>
-
-                {options.map((option) => (
-                    <option
-                        key={option}
-                        value={option}
-                    >
-                        {option}
+                <select
+                    id={name}
+                    {...register(name, {
+                        required: `${label} is required`,
+                    })}
+                    className="select select-bordered h-11 min-h-11 w-full border-gray-200 bg-[#F9FAFB] font-normal focus:border-[#C6E871] focus:outline-none focus:ring-1 focus:ring-[#C6E871]"
+                >
+                    <option value="">
+                        Select {label}
                     </option>
-                ))}
-            </select>
 
-            {errors[name] && (
-                <span className="mt-1 text-xs text-red-500">
-                    {errors[name].message}
-                </span>
-            )}
-        </div>
-    );
+                    {options.map((option) => (
+                        <option
+                            key={option}
+                            value={option}
+                        >
+                            {option}
+                        </option>
+                    ))}
+                </select>
+
+                {errors[name] && (
+                    <span className="mt-1 text-xs text-red-500">
+                        {errors[name].message}
+                    </span>
+                )}
+            </div>
+        );
+    };
 
     const TextareaSection = ({
         label,
         name,
-    }) => (
-        <div className="form-control flex w-full flex-col">
-            <label
-                htmlFor={name}
-                className="label py-0.5"
-            >
-                <span className="text-xs font-medium text-gray-500">
-                    {label}
-                </span>
-            </label>
+    }) => {
+        return (
+            <div className="form-control flex w-full flex-col">
+                <label
+                    htmlFor={name}
+                    className="label py-0.5"
+                >
+                    <span className="text-xs font-medium text-gray-500">
+                        {label}
+                    </span>
+                </label>
 
-            <textarea
-                id={name}
-                {...register(name, {
-                    required: `${label} is required`,
-                })}
-                placeholder={label}
-                className="textarea textarea-bordered h-24 w-full border-gray-200 bg-[#F9FAFB] focus:border-[#C6E871] focus:outline-none focus:ring-1 focus:ring-[#C6E871]"
-            />
+                <textarea
+                    id={name}
+                    {...register(name, {
+                        required: `${label} is required`,
+                    })}
+                    placeholder={label}
+                    className="textarea textarea-bordered h-24 w-full border-gray-200 bg-[#F9FAFB] focus:border-[#C6E871] focus:outline-none focus:ring-1 focus:ring-[#C6E871]"
+                />
 
-            {errors[name] && (
-                <span className="mt-1 text-xs text-red-500">
-                    {errors[name].message}
-                </span>
-            )}
-        </div>
-    );
+                {errors[name] && (
+                    <span className="mt-1 text-xs text-red-500">
+                        {errors[name].message}
+                    </span>
+                )}
+            </div>
+        );
+    };
 
     return (
         <form
@@ -385,8 +340,7 @@ const SendParcel = () => {
                                 name="parcelType"
                                 value={type}
                                 checked={
-                                    parcelType ===
-                                    type
+                                    parcelType === type
                                 }
                                 onChange={() =>
                                     handleParcelTypeChange(
@@ -397,8 +351,7 @@ const SendParcel = () => {
                             />
 
                             <span className="text-sm font-medium text-gray-700 md:text-[15px]">
-                                {type ===
-                                    "document"
+                                {type === "document"
                                     ? "Document"
                                     : "Non-Document"}
                             </span>
@@ -425,7 +378,7 @@ const SendParcel = () => {
             </div>
 
             <div className="grid grid-cols-1 gap-10 md:gap-14 lg:grid-cols-2 lg:gap-16">
-                {/* Sender */}
+                {/* Sender Details */}
                 <div className="flex flex-col gap-5 md:gap-6">
                     <h3 className="text-base font-semibold text-[#1D3531] md:text-lg">
                         Sender Details
@@ -469,7 +422,7 @@ const SendParcel = () => {
                     />
                 </div>
 
-                {/* Receiver */}
+                {/* Receiver Details */}
                 <div className="flex flex-col gap-5 md:gap-6">
                     <h3 className="text-base font-semibold text-[#1D3531] md:text-lg">
                         Receiver Details

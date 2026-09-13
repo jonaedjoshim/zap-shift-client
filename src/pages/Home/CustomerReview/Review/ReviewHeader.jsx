@@ -1,15 +1,19 @@
-import React from 'react';
-
 const ReviewHeader = () => {
     return (
-        <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-[#002B2B] mb-6">
-                What our customers are sayings
+        <div className="mx-auto mb-10 max-w-2xl text-center md:mb-14">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8BA63D]">
+                Customer Stories
+            </p>
+
+            <h2 className="mt-2 text-3xl font-bold text-[#002B2B] md:text-4xl">
+                What Our Customers Are Saying
             </h2>
 
-            <p className="text-gray-500 text-sm md:text-lg max-w-2xl mx-auto leading-relaxed">
-                Enhance posture, mobility, and well-being effortlessly with Posture Pro. 
-                Achieve proper alignment, reduce pain, and strengthen your body with ease!
+            <p className="mt-4 text-sm leading-6 text-gray-500 md:text-base md:leading-7">
+                See how customers and businesses use
+                ZapShift for fast, dependable, and
+                convenient parcel delivery across
+                Bangladesh.
             </p>
         </div>
     );

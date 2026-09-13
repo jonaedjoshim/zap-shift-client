@@ -1,21 +1,31 @@
-const FeatureCard = ({ title, description, image }) => {
+const FeatureCard = ({
+    title,
+    description,
+    image,
+}) => {
     return (
-        <div className="flex flex-col md:flex-row border items-center p-8 rounded-2xl bg-white gap-6 md:gap-0">
+        <article className="flex flex-col items-center gap-6 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm md:flex-row md:p-8">
             <img
                 src={image}
-                alt={title}
-                className="w-32 h-32 md:w-40 md:h-40 object-contain shrink-0"
+                alt=""
+                className="h-32 w-32 shrink-0 object-contain md:h-40 md:w-40"
             />
-            <div className="hidden md:block h-34 border-l border-dashed border-[#03373D] mx-12"></div>
-            <div className="text-center md:text-left max-w-2xl">
-                <h3 className="text-2xl md:text-3xl font-semibold mb-4">
+
+            <div
+                className="hidden h-34 border-l border-dashed border-[#03373D]/30 md:block md:mx-8 lg:mx-12"
+                aria-hidden="true"
+            />
+
+            <div className="max-w-2xl text-center md:text-left">
+                <h3 className="text-xl font-semibold text-[#03373D] md:text-2xl">
                     {title}
                 </h3>
-                <p className="text-base md:text-lg leading-relaxed text-gray-500">
+
+                <p className="mt-3 text-sm leading-6 text-gray-500 md:text-base md:leading-7">
                     {description}
                 </p>
             </div>
-        </div>
+        </article>
     );
 };
 

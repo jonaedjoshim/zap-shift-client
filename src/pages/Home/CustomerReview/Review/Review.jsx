@@ -1,13 +1,12 @@
-import React from 'react';
-import ReviewHeader from './ReviewHeader';
-import ReviewCarousel from '../ReviewCarousel/ReviewCarousel';
+import ReviewCarousel from "../ReviewCarousel/ReviewCarousel";
+import ReviewHeader from "./ReviewHeader";
 
 const Review = () => {
     return (
-        <div>
+        <section className="py-12 md:py-16">
             <ReviewHeader />
             <ReviewCarousel />
-        </div>
+        </section>
     );
 };
 

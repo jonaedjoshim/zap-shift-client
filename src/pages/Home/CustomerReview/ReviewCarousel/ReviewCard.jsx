@@ -1,36 +1,51 @@
-import React from 'react';
-import reviewQuote from '../../../../assets/reviewQuote.png';
+import reviewQuote from "../../../../assets/reviewQuote.png";
 
-const ReviewCard = ({ review, isActive }) => {
+const ReviewCard = ({
+    review,
+    isActive,
+}) => {
     return (
-        <div className={`relative bg-gray-100 rounded-3xl p-8 shadow-xl max-w-sm w-full flex flex-col justify-between min-h-70 transition-all duration-500 border ${isActive ? 'border-lime-200' : 'border-transparent'}`}>
-            <div className='my-2'>
-                <img src={reviewQuote} alt="quote" className="size-10" />
-            </div>
+        <article
+            className={`relative flex min-h-70 w-full max-w-sm flex-col justify-between rounded-3xl border bg-white p-7 shadow-sm transition-all duration-500 ${isActive
+                    ? "border-lime-200 shadow-lg"
+                    : "border-gray-100"
+                }`}
+        >
+            <img
+                src={reviewQuote}
+                alt=""
+                className="h-9 w-9 object-contain"
+                aria-hidden="true"
+            />
 
-            <div className="flex-1">
-                <p className={`text-gray-700 text-base md:text-lg leading-relaxed italic ${isActive ? 'font-medium' : 'font-normal'}`}>
-                    "{review.review}"
+            <div className="mt-5 flex-1">
+                <p className="text-sm leading-6 text-gray-600 md:text-base">
+                    “{review.review}”
                 </p>
             </div>
 
             <div className="mt-8">
-                <div className="border-t border-dashed border-gray-200 w-full mb-6"></div>
+                <div className="mb-5 w-full border-t border-dashed border-gray-200" />
+
                 <div className="flex items-center gap-4">
-                    <div className="size-12 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold text-lg shadow-inner">
-                        {review.name.charAt(0)}
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#DCE7E8] font-bold text-[#03373D]">
+                        {review.name
+                            .charAt(0)
+                            .toUpperCase()}
                     </div>
+
                     <div>
-                        <h4 className="font-bold text-gray-bg-gray-800 text-base md:text-lg">
+                        <h4 className="text-base font-bold text-gray-800">
                             {review.name}
                         </h4>
-                        <p className="text-gray-500 text-xs md:text-sm uppercase tracking-wider font-semibold">
+
+                        <p className="text-xs font-medium text-gray-500">
                             {review.role}
                         </p>
                     </div>
                 </div>
             </div>
-        </div>
+        </article>
     );
 };
 

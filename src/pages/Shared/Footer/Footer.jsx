@@ -1,49 +1,117 @@
-import React from 'react';
-import { FaLinkedinIn, FaFacebookF, FaYoutube } from "react-icons/fa";
+import {
+    FaFacebookF,
+    FaLinkedinIn,
+    FaYoutube,
+} from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import ZapShiftLogo from '../ZapShiftLogo';
-import { Link } from 'react-router';
+import { Link } from "react-router-dom";
+
+import ZapShiftLogo from "../ZapShiftLogo";
+
+const footerLinks = [
+    {
+        label: "Home",
+        path: "/",
+    },
+    {
+        label: "Coverage",
+        path: "/coverage",
+    },
+    {
+        label: "About Us",
+        path: "/about",
+    },
+    {
+        label: "Pricing",
+        path: "/pricing",
+    },
+    {
+        label: "Send Parcel",
+        path: "/sendParcel",
+    },
+];
+
+const socialLinks = [
+    {
+        label: "LinkedIn",
+        icon: FaLinkedinIn,
+        color: "bg-[#0077B5]",
+    },
+    {
+        label: "X / Twitter",
+        icon: FaXTwitter,
+        color: "bg-white text-black",
+    },
+    {
+        label: "Facebook",
+        icon: FaFacebookF,
+        color: "bg-[#1877F2]",
+    },
+    {
+        label: "YouTube",
+        icon: FaYoutube,
+        color: "bg-[#FF0000]",
+    },
+];
 
 const Footer = () => {
     return (
         <footer className="w-full px-4 pb-10">
-            <div className="max-w-7xl mx-auto bg-[#050505] rounded-4xl p-10 md:p-16 flex flex-col items-center text-center">
-
-                <div className="mb-6">
+            <div className="mx-auto flex max-w-7xl flex-col items-center rounded-4xl bg-[#050505] p-8 text-center md:p-14">
+                <div className="mb-5">
                     <ZapShiftLogo textColor="text-white" />
                 </div>
 
-                <p className="text-gray-400 text-sm md:text-base max-w-2xl mb-10 leading-relaxed">
-                    Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle. From personal packages to business shipments — we deliver on time, every time.
+                <p className="mb-8 max-w-2xl text-sm leading-6 text-gray-400 md:text-base md:leading-7">
+                    Fast, dependable parcel delivery
+                    with convenient booking, nationwide
+                    coverage, and simple tracking for
+                    individuals and businesses.
                 </p>
 
-                <div className="w-full border-t border-gray-800/50 mb-8"></div>
+                <div className="mb-7 w-full border-t border-dashed border-[#16464A]" />
 
-                <nav className="flex flex-wrap justify-center gap-6 md:gap-10 text-gray-300 text-sm md:text-base mb-10">
-                    <Link to="/" className="hover:text-white transition-colors">Home</Link>
-                    <Link to="/coverage" className="hover:text-white transition-colors">Coverage</Link>
-                    <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
-                    <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-                    <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
+                <nav
+                    className="mb-7 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-gray-300 md:text-base"
+                    aria-label="Footer navigation"
+                >
+                    {footerLinks.map((link) => (
+                        <Link
+                            key={link.path}
+                            to={link.path}
+                            className="transition-colors hover:text-[#CAEB66]"
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
                 </nav>
 
-                <div className="w-full border-t border-gray-800/50 mb-8"></div>
+                <div className="mb-7 w-full border-t border-dashed border-[#16464A]" />
 
-                <div className="flex justify-center gap-4">
-                    <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-[#0077B5] text-white hover:opacity-80 transition-opacity">
-                        <FaLinkedinIn size={20} />
-                    </a>
-                    <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-black hover:bg-gray-200 transition-colors">
-                        <FaXTwitter size={20} />
-                    </a>
-                    <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1877F2] text-white hover:opacity-80 transition-opacity">
-                        <FaFacebookF size={18} />
-                    </a>
-                    <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-[#FF0000] text-white hover:opacity-80 transition-opacity">
-                        <FaYoutube size={20} />
-                    </a>
+                <div
+                    className="flex justify-center gap-3"
+                    aria-label="Social media"
+                >
+                    {socialLinks.map((social) => {
+                        const Icon = social.icon;
+
+                        return (
+                            <div
+                                key={social.label}
+                                title={`${social.label} link coming soon`}
+                                aria-label={social.label}
+                                className={`flex h-9 w-9 items-center justify-center rounded-full text-white ${social.color}`}
+                            >
+                                <Icon size={17} />
+                            </div>
+                        );
+                    })}
                 </div>
 
+                <p className="mt-7 text-xs text-gray-600">
+                    © {new Date().getFullYear()} ZapShift.
+                    All rights reserved.
+                </p>
             </div>
         </footer>
     );

@@ -1,32 +1,43 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+
 import errorImg from "../../assets/error.png";
-import Navbar from "../Shared/Navbar/Navbar";
 import Footer from "../Shared/Footer/Footer";
+import Navbar from "../Shared/Navbar/Navbar";
 
 const ErrorPage = () => {
     return (
-        <div className="flex flex-col min-h-screen">
-            <Navbar/>
-            <div
-                className="w-11/12 lg:max-w-7xl mx-auto flex flex-col items-center justify-center text-center min-h-[75vh]"
+        <div className="flex min-h-screen flex-col gap-10 py-8">
+            <Navbar />
+
+            <main
+                className="mx-auto flex min-h-[65vh] w-11/12 max-w-7xl flex-1 flex-col items-center justify-center rounded-3xl bg-white px-6 text-center"
                 data-aos="zoom-in"
-                data-aos-duration="1000"
-                data-aos-easing="ease-in-out"
             >
                 <img
                     src={errorImg}
-                    alt="Error 404"
-                    className="w-64 mb-6"
+                    alt="Page not found illustration"
+                    className="w-52 object-contain md:w-64"
                 />
-                <Link to="/">
-                    <button className="bg-lime-400 px-6 py-2 rounded-lg font-semibold hover:bg-lime-500 transition">
-                        Go Home
-                    </button>
+
+                <h1 className="mt-5 text-3xl font-bold text-[#03373D] md:text-4xl">
+                    Page Not Found
+                </h1>
+
+                <p className="mt-3 max-w-md text-sm leading-6 text-gray-500 md:text-base">
+                    The page you are looking for
+                    does not exist or may have been
+                    moved.
+                </p>
+
+                <Link
+                    to="/"
+                    className="mt-7 rounded-lg bg-[#CAEB66] px-6 py-3 font-semibold text-black transition hover:bg-[#b9dd50]"
+                >
+                    Go Home
                 </Link>
-            </div>
-            <div data-aos="fade-up" data-aos-duration="800">
-                <Footer />
-            </div>
+            </main>
+
+            <Footer />
         </div>
     );
 };

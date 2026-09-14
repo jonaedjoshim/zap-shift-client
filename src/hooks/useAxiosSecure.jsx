@@ -1,33 +1,68 @@
-// hooks/useAxiosSecure.js
-import { useEffect } from 'react';
-import axios from 'axios';
-import useAuth from './useAuth';
+import axios from "axios";
+import { useEffect } from "react";
+
+import useAuth from "./useAuth";
+
+const axiosSecure = axios.create({
+    baseURL:
+        import.meta.env.VITE_API_URL ||
+        "http://localhost:5000/api",
+    headers: {
+        "Content-Type": "application/json",
+    },
+});
 
 const useAxiosSecure = () => {
-    const { token } = useAuth(); // your auth hook
+    const { user } = useAuth();
 
-    const axiosSecure = axios.create({
-        baseURL: 'https://your-api-domain.com',  // backend API base url
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
+    useEffect(() => {
+        const requestInterceptor =
+            axiosSecure.interceptors.request.use(
+                async (config) => {
+                    if (user) {
+                        const token =
+                            await user.getIdToken();
 
-    // attach token dynamically
-    axiosSecure.interceptors.request.use(config => {
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    });
+                        config.headers.Authorization =
+                            `Bearer ${token}`;
+                    }
 
-    axiosSecure.interceptors.response.use(
-        response => response,
-        error => {
-            console.error('Axios error:', error.response?.data || error.message);
-            return Promise.reject(error);
-        }
-    );
+                    return config;
+                },
+                (error) =>
+                    Promise.reject(error)
+            );
+
+        const responseInterceptor =
+            axiosSecure.interceptors.response.use(
+                (response) => response,
+
+                (error) => {
+                    if (
+                        error.response?.status ===
+                        401
+                    ) {
+                        console.error(
+                            "Authentication failed or token expired."
+                        );
+                    }
+
+                    return Promise.reject(
+                        error
+                    );
+                }
+            );
+
+        return () => {
+            axiosSecure.interceptors.request.eject(
+                requestInterceptor
+            );
+
+            axiosSecure.interceptors.response.eject(
+                responseInterceptor
+            );
+        };
+    }, [user]);
 
     return axiosSecure;
 };

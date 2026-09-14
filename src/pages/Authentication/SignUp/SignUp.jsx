@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {
+    FaEye,
+    FaEyeSlash,
+} from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import {
     Link,
@@ -9,10 +12,14 @@ import {
 import toast from "react-hot-toast";
 
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { syncCurrentUser } from "../../../services/userService";
 
 const SignUp = () => {
-    const [showPassword, setShowPassword] =
-        useState(false);
+    const [
+        showPassword,
+        setShowPassword,
+    ] = useState(false);
 
     const navigate = useNavigate();
 
@@ -23,6 +30,9 @@ const SignUp = () => {
         verifyEmail,
     } = useAuth();
 
+    const axiosSecure =
+        useAxiosSecure();
+
     const {
         register,
         handleSubmit,
@@ -30,29 +40,43 @@ const SignUp = () => {
     } = useForm();
 
     const onSubmit = async (data) => {
-        const toastId = toast.loading(
-            "Creating your account..."
-        );
-
-        try {
-            await createUser(
-                data.email,
-                data.password
+        const toastId =
+            toast.loading(
+                "Creating your account..."
             );
 
+        try {
+            const result =
+                await createUser(
+                    data.email,
+                    data.password
+                );
+
             await updateUserProfile({
-                displayName: data.name,
+                displayName:
+                    data.name,
             });
+
+            await result.user.reload();
+
+            await syncCurrentUser(
+                axiosSecure,
+                result.user
+            );
 
             await verifyEmail();
 
             toast.success(
                 "Account created. Please verify your email.",
-                { id: toastId }
+                {
+                    id: toastId,
+                }
             );
 
             navigate("/");
         } catch (error) {
+            console.error(error);
+
             let message =
                 "Unable to create your account.";
 
@@ -63,12 +87,14 @@ const SignUp = () => {
                 message =
                     "An account already exists with this email.";
             } else if (
-                error.code === "auth/invalid-email"
+                error.code ===
+                "auth/invalid-email"
             ) {
                 message =
                     "Please enter a valid email address.";
             } else if (
-                error.code === "auth/weak-password"
+                error.code ===
+                "auth/weak-password"
             ) {
                 message =
                     "Please choose a stronger password.";
@@ -81,23 +107,36 @@ const SignUp = () => {
     };
 
     const handleGoogle = async () => {
-        const toastId = toast.loading(
-            "Signing up with Google..."
-        );
+        const toastId =
+            toast.loading(
+                "Signing up with Google..."
+            );
 
         try {
-            await googleSignIn();
+            const result =
+                await googleSignIn();
+
+            await syncCurrentUser(
+                axiosSecure,
+                result.user
+            );
 
             toast.success(
                 "Signed in successfully.",
-                { id: toastId }
+                {
+                    id: toastId,
+                }
             );
 
             navigate("/");
-        } catch {
+        } catch (error) {
+            console.error(error);
+
             toast.error(
                 "Google sign up failed.",
-                { id: toastId }
+                {
+                    id: toastId,
+                }
             );
         }
     };
@@ -122,7 +161,9 @@ const SignUp = () => {
                 </div>
 
                 <form
-                    onSubmit={handleSubmit(onSubmit)}
+                    onSubmit={handleSubmit(
+                        onSubmit
+                    )}
                     className="space-y-4"
                 >
                     <div>
@@ -138,16 +179,23 @@ const SignUp = () => {
                             type="text"
                             placeholder="Name"
                             autoComplete="name"
-                            {...register("name", {
-                                required:
-                                    "Name is required",
-                            })}
+                            {...register(
+                                "name",
+                                {
+                                    required:
+                                        "Name is required",
+                                }
+                            )}
                             className="w-full rounded-md border px-4 py-2"
                         />
 
                         {errors.name && (
                             <p className="mt-1 text-xs text-red-500">
-                                {errors.name.message}
+                                {
+                                    errors
+                                        .name
+                                        .message
+                                }
                             </p>
                         )}
                     </div>
@@ -165,16 +213,23 @@ const SignUp = () => {
                             type="email"
                             placeholder="Email"
                             autoComplete="email"
-                            {...register("email", {
-                                required:
-                                    "Email is required",
-                            })}
+                            {...register(
+                                "email",
+                                {
+                                    required:
+                                        "Email is required",
+                                }
+                            )}
                             className="w-full rounded-md border px-4 py-2"
                         />
 
                         {errors.email && (
                             <p className="mt-1 text-xs text-red-500">
-                                {errors.email.message}
+                                {
+                                    errors
+                                        .email
+                                        .message
+                                }
                             </p>
                         )}
                     </div>
@@ -197,15 +252,20 @@ const SignUp = () => {
                                 }
                                 placeholder="Password"
                                 autoComplete="new-password"
-                                {...register("password", {
-                                    required:
-                                        "Password is required",
-                                    minLength: {
-                                        value: 6,
-                                        message:
-                                            "Minimum 6 characters",
-                                    },
-                                })}
+                                {...register(
+                                    "password",
+                                    {
+                                        required:
+                                            "Password is required",
+
+                                        minLength:
+                                        {
+                                            value: 6,
+                                            message:
+                                                "Minimum 6 characters",
+                                        },
+                                    }
+                                )}
                                 className="w-full rounded-md border px-4 py-2 pr-11"
                             />
 
@@ -213,7 +273,9 @@ const SignUp = () => {
                                 type="button"
                                 onClick={() =>
                                     setShowPassword(
-                                        (previous) =>
+                                        (
+                                            previous
+                                        ) =>
                                             !previous
                                     )
                                 }
@@ -234,7 +296,11 @@ const SignUp = () => {
 
                         {errors.password && (
                             <p className="mt-1 text-xs text-red-500">
-                                {errors.password.message}
+                                {
+                                    errors
+                                        .password
+                                        .message
+                                }
                             </p>
                         )}
                     </div>

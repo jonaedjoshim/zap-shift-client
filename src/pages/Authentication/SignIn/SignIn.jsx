@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import {
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import {
   Link,
@@ -10,10 +13,14 @@ import {
 import toast from "react-hot-toast";
 
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { syncCurrentUser } from "../../../services/userService";
 
 const SignIn = () => {
-  const [showPassword, setShowPassword] =
-    useState(false);
+  const [
+    showPassword,
+    setShowPassword,
+  ] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,8 +30,12 @@ const SignIn = () => {
     googleSignIn,
   } = useAuth();
 
+  const axiosSecure =
+    useAxiosSecure();
+
   const from =
-    location.state?.from?.pathname || "/";
+    location.state?.from
+      ?.pathname || "/";
 
   const {
     register,
@@ -33,30 +44,45 @@ const SignIn = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const toastId = toast.loading(
-      "Signing in..."
-    );
+    const toastId =
+      toast.loading(
+        "Signing in..."
+      );
 
     try {
-      await signInUser(
-        data.email,
-        data.password
+      const result =
+        await signInUser(
+          data.email,
+          data.password
+        );
+
+      await syncCurrentUser(
+        axiosSecure,
+        result.user
       );
 
       toast.success(
         "Signed in successfully",
-        { id: toastId }
+        {
+          id: toastId,
+        }
       );
 
       navigate(from, {
         replace: true,
       });
     } catch (error) {
+      console.error(error);
+
       let message =
         "Unable to sign in. Please check your credentials.";
 
-      if (error.code === "auth/invalid-email") {
-        message = "Invalid email address.";
+      if (
+        error.code ===
+        "auth/invalid-email"
+      ) {
+        message =
+          "Invalid email address.";
       } else if (
         error.code ===
         "auth/too-many-requests"
@@ -72,25 +98,38 @@ const SignIn = () => {
   };
 
   const handleGoogle = async () => {
-    const toastId = toast.loading(
-      "Signing in with Google..."
-    );
+    const toastId =
+      toast.loading(
+        "Signing in with Google..."
+      );
 
     try {
-      await googleSignIn();
+      const result =
+        await googleSignIn();
+
+      await syncCurrentUser(
+        axiosSecure,
+        result.user
+      );
 
       toast.success(
         "Signed in successfully",
-        { id: toastId }
+        {
+          id: toastId,
+        }
       );
 
       navigate(from, {
         replace: true,
       });
-    } catch {
+    } catch (error) {
+      console.error(error);
+
       toast.error(
         "Google sign in failed.",
-        { id: toastId }
+        {
+          id: toastId,
+        }
       );
     }
   };
@@ -107,7 +146,9 @@ const SignIn = () => {
         </p>
 
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(
+            onSubmit
+          )}
           className="space-y-4"
         >
           <div>
@@ -123,16 +164,23 @@ const SignIn = () => {
               type="email"
               placeholder="Email"
               autoComplete="email"
-              {...register("email", {
-                required:
-                  "Email is required",
-              })}
+              {...register(
+                "email",
+                {
+                  required:
+                    "Email is required",
+                }
+              )}
               className="w-full rounded-md border px-4 py-2"
             />
 
             {errors.email && (
               <p className="mt-1 text-xs text-red-500">
-                {errors.email.message}
+                {
+                  errors
+                    .email
+                    .message
+                }
               </p>
             )}
           </div>
@@ -155,15 +203,20 @@ const SignIn = () => {
                 }
                 placeholder="Password"
                 autoComplete="current-password"
-                {...register("password", {
-                  required:
-                    "Password is required",
-                  minLength: {
-                    value: 6,
-                    message:
-                      "Minimum 6 characters",
-                  },
-                })}
+                {...register(
+                  "password",
+                  {
+                    required:
+                      "Password is required",
+
+                    minLength:
+                    {
+                      value: 6,
+                      message:
+                        "Minimum 6 characters",
+                    },
+                  }
+                )}
                 className="w-full rounded-md border px-4 py-2 pr-11"
               />
 
@@ -171,7 +224,9 @@ const SignIn = () => {
                 type="button"
                 onClick={() =>
                   setShowPassword(
-                    (previous) =>
+                    (
+                      previous
+                    ) =>
                       !previous
                   )
                 }
@@ -192,7 +247,11 @@ const SignIn = () => {
 
             {errors.password && (
               <p className="mt-1 text-xs text-red-500">
-                {errors.password.message}
+                {
+                  errors
+                    .password
+                    .message
+                }
               </p>
             )}
           </div>
@@ -215,7 +274,8 @@ const SignIn = () => {
         </p>
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          Don&apos;t have an account?{" "}
+          Don&apos;t have an
+          account?{" "}
           <Link
             to="/signup"
             className="font-medium text-lime-600"

@@ -10,6 +10,7 @@ import SignIn from "../pages/Authentication/SignIn/SignIn";
 import SignUp from "../pages/Authentication/SignUp/SignUp";
 import Coverage from "../pages/Coverage/Coverage";
 import DashboardHome from "../pages/Dashboard/DashboardHome";
+import MyParcels from "../pages/Dashboard/MyParcels/MyParcels";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Home from "../pages/Home/Home/Home";
 import Pricing from "../pages/Pricing/Pricing";
@@ -82,6 +83,11 @@ export const router =
                     index: true,
                     element:
                         <DashboardHome />,
+                },
+                {
+                    path: "my-parcels",
+                    element:
+                        <MyParcels />,
                 },
             ],
         },

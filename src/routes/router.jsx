@@ -10,6 +10,11 @@ import SignIn from "../pages/Authentication/SignIn/SignIn";
 import SignUp from "../pages/Authentication/SignUp/SignUp";
 import BeARider from "../pages/BeARider/BeARider";
 import Coverage from "../pages/Coverage/Coverage";
+
+import ManageParcels from "../pages/Dashboard/Admin/ManageParcels";
+import ManageUsers from "../pages/Dashboard/Admin/ManageUsers";
+import RiderApplications from "../pages/Dashboard/Admin/RiderApplications";
+
 import DashboardHome from "../pages/Dashboard/DashboardHome";
 import MyParcels from "../pages/Dashboard/MyParcels/MyParcels";
 import PaymentPage from "../pages/Dashboard/Payment/PaymentPage";
@@ -111,6 +116,18 @@ export const router = createBrowserRouter([
             {
                 path: "earnings",
                 element: <RiderEarnings />,
+            },
+            {
+                path: "parcels",
+                element: <ManageParcels />,
+            },
+            {
+                path: "users",
+                element: <ManageUsers />,
+            },
+            {
+                path: "riders",
+                element: <RiderApplications />,
             },
         ],
     },

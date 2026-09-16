@@ -8,7 +8,7 @@ import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const BeARider = () => {
-    const { user } = useAuth();
+    const { user, loading: authLoading } = useAuth();
     const axiosSecure = useAxiosSecure();
 
     const [application, setApplication] = useState(null);
@@ -34,28 +34,40 @@ const BeARider = () => {
     }, []);
 
     useEffect(() => {
-        let ignore = false;
+        let isMounted = true;
+
         const loadMyApplication = async () => {
+            if (authLoading) return;
+
             if (!user) {
-                setLoading(false);
+                if (isMounted) setLoading(false);
                 return;
             }
+
             try {
-                setLoading(true);
+                if (isMounted) setLoading(true);
                 const response = await axiosSecure.get("/riders/my-application");
-                if (!ignore) {
+                if (isMounted) {
                     setApplication(response.data?.data || null);
                 }
             } catch (error) {
-                console.error("Failed to fetch application:", error);
+                // If 404, 401, or network error, treat as no application -> show form
+                if (isMounted) {
+                    setApplication(null);
+                }
             } finally {
-                if (!ignore) setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                }
             }
         };
 
         loadMyApplication();
-        return () => { ignore = true; };
-    }, [user, axiosSecure]);
+
+        return () => {
+            isMounted = false;
+        };
+    }, [user, authLoading, axiosSecure]);
 
     const onSubmit = async (data) => {
         try {
@@ -83,7 +95,7 @@ const BeARider = () => {
         }
     };
 
-    if (loading) {
+    if (authLoading || loading) {
         return (
             <div className="flex min-h-80 items-center justify-center">
                 <span className="loading loading-ring loading-lg text-[#8BA63D]" />

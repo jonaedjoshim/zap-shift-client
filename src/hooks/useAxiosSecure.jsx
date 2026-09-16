@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import useAuth from "./useAuth";
 
 const axiosSecure = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+    baseURL: import.meta.env.VITE_API_URL || "https://zap-shift-server-mj.vercel.app/api",
     timeout: 10000, // 10 seconds timeout so requests NEVER hang forever
     headers: {
         "Content-Type": "application/json",

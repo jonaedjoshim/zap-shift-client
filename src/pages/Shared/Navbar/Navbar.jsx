@@ -23,6 +23,10 @@ const navLinks = [
         path: "/",
     },
     {
+        label: "Track Order",
+        path: "/track-consignment",
+    },
+    {
         label: "Send Parcel",
         path: "/sendParcel",
     },
@@ -138,8 +142,8 @@ const Navbar = () => {
         isActive,
     }) => {
         return `rounded-full px-4 py-2 font-medium transition-colors ${isActive
-                ? "bg-[#CAEB66] text-black"
-                : "text-[#606060] hover:bg-gray-100 hover:text-black"
+            ? "bg-[#CAEB66] text-black"
+            : "text-[#606060] hover:bg-gray-100 hover:text-black"
             }`;
     };
 
@@ -156,7 +160,7 @@ const Navbar = () => {
                                     !previous
                             )
                         }
-                        className="mr-1 flex h-10 w-10 items-center justify-center rounded-lg transition hover:bg-gray-100 lg:hidden"
+                        className="mr-1 flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg transition hover:bg-gray-100 lg:hidden"
                         aria-label="Toggle navigation"
                         aria-expanded={
                             isMenuOpen
@@ -248,7 +252,7 @@ const Navbar = () => {
                         onClick={
                             handleThemeChange
                         }
-                        className="group rounded-full border-none bg-transparent p-2 outline-none transition-all duration-300 hover:bg-gray-100/50 active:scale-95"
+                        className="group cursor-pointer rounded-full border-none bg-transparent p-2 outline-none transition-all duration-300 hover:bg-gray-100/50 active:scale-95"
                         aria-label="Change theme"
                     >
                         <img
@@ -261,15 +265,24 @@ const Navbar = () => {
                     {loading ? (
                         <div className="hidden h-10 w-24 animate-pulse rounded-xl bg-gray-200 lg:block" />
                     ) : user ? (
-                        <button
-                            type="button"
-                            onClick={
-                                handleSignOut
-                            }
-                            className="hidden rounded-xl border border-gray-200 px-5 py-2.5 font-medium transition hover:bg-gray-100 lg:block"
-                        >
-                            Sign Out
-                        </button>
+                        <div className="hidden items-center gap-2 lg:flex">
+                            <Link
+                                to="/dashboard"
+                                className="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium transition hover:bg-gray-100"
+                            >
+                                Dashboard
+                            </Link>
+
+                            <button
+                                type="button"
+                                onClick={
+                                    handleSignOut
+                                }
+                                className="cursor-pointer rounded-xl bg-[#03373D] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#022428]"
+                            >
+                                Sign Out
+                            </button>
+                        </div>
                     ) : (
                         <div className="hidden items-center gap-2 lg:flex">
                             <Link
@@ -345,15 +358,27 @@ const Navbar = () => {
                             {loading ? (
                                 <div className="h-10 w-full animate-pulse rounded-lg bg-gray-200" />
                             ) : user ? (
-                                <button
-                                    type="button"
-                                    onClick={
-                                        handleSignOut
-                                    }
-                                    className="rounded-lg bg-gray-100 px-4 py-3 text-left font-medium"
-                                >
-                                    Sign Out
-                                </button>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <Link
+                                        to="/dashboard"
+                                        onClick={
+                                            closeMobileMenu
+                                        }
+                                        className="rounded-lg border border-[#03373D] px-4 py-3 text-center font-medium text-[#03373D]"
+                                    >
+                                        Dashboard
+                                    </Link>
+
+                                    <button
+                                        type="button"
+                                        onClick={
+                                            handleSignOut
+                                        }
+                                        className="cursor-pointer rounded-lg bg-[#03373D] px-4 py-3 text-center font-medium text-white"
+                                    >
+                                        Sign Out
+                                    </button>
+                                </div>
                             ) : (
                                 <div className="grid grid-cols-2 gap-2">
                                     <Link

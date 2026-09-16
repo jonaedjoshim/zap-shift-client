@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-    Link,
-    NavLink,
-    useNavigate,
-} from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import toast from "react-hot-toast";
 
@@ -11,126 +7,52 @@ import themeBtn from "../../../assets/theme-btn.png";
 import useAuth from "../../../hooks/useAuth";
 import ZapShiftLogo from "../ZapShiftLogo";
 
-const themes = [
-    "default",
-    "retro",
-    "valentine",
-];
+const themes = ["default", "retro", "valentine"];
 
 const navLinks = [
-    {
-        label: "Home",
-        path: "/",
-    },
-    {
-        label: "Track Order",
-        path: "/track-consignment",
-    },
-    {
-        label: "Send Parcel",
-        path: "/sendParcel",
-    },
-    {
-        label: "Coverage",
-        path: "/coverage",
-    },
-    {
-        label: "About Us",
-        path: "/about",
-    },
-    {
-        label: "Pricing",
-        path: "/pricing",
-    },
+    { label: "Home", path: "/" },
+    { label: "Track Order", path: "/track-consignment" },
+    { label: "Send Parcel", path: "/sendParcel" },
+    { label: "Be a Rider", path: "/be-a-rider" },
+    { label: "Coverage", path: "/coverage" },
+    { label: "Pricing", path: "/pricing" },
 ];
 
 const Navbar = () => {
-    const {
-        user,
-        loading,
-        signout,
-    } = useAuth();
-
+    const { user, loading, signout } = useAuth();
     const navigate = useNavigate();
-
-    const [themeIndex, setThemeIndex] =
-        useState(0);
-
-    const [isMenuOpen, setIsMenuOpen] =
-        useState(false);
+    const [themeIndex, setThemeIndex] = useState(0);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
-        const savedTheme =
-            localStorage.getItem("theme") ||
-            "default";
-
-        const savedThemeIndex =
-            themes.indexOf(savedTheme);
-
-        const validTheme =
-            savedThemeIndex >= 0
-                ? savedTheme
-                : "default";
-
-        const validIndex =
-            savedThemeIndex >= 0
-                ? savedThemeIndex
-                : 0;
+        const savedTheme = localStorage.getItem("theme") || "default";
+        const savedThemeIndex = themes.indexOf(savedTheme);
+        const validTheme = savedThemeIndex >= 0 ? savedTheme : "default";
+        const validIndex = savedThemeIndex >= 0 ? savedThemeIndex : 0;
 
         setThemeIndex(validIndex);
-
-        document.documentElement.setAttribute(
-            "data-theme",
-            validTheme
-        );
+        document.documentElement.setAttribute("data-theme", validTheme);
     }, []);
 
     const handleThemeChange = () => {
-        const nextIndex =
-            (themeIndex + 1) %
-            themes.length;
-
-        const nextTheme =
-            themes[nextIndex];
+        const nextIndex = (themeIndex + 1) % themes.length;
+        const nextTheme = themes[nextIndex];
 
         setThemeIndex(nextIndex);
-
-        document.documentElement.setAttribute(
-            "data-theme",
-            nextTheme
-        );
-
-        localStorage.setItem(
-            "theme",
-            nextTheme
-        );
+        document.documentElement.setAttribute("data-theme", nextTheme);
+        localStorage.setItem("theme", nextTheme);
     };
 
     const handleSignOut = async () => {
-        const toastId = toast.loading(
-            "Signing out..."
-        );
+        const toastId = toast.loading("Signing out...");
 
         try {
             await signout();
-
-            toast.success(
-                "Signed out successfully",
-                {
-                    id: toastId,
-                }
-            );
-
+            toast.success("Signed out successfully", { id: toastId });
             setIsMenuOpen(false);
-
             navigate("/signin");
         } catch {
-            toast.error(
-                "Sign out failed",
-                {
-                    id: toastId,
-                }
-            );
+            toast.error("Sign out failed", { id: toastId });
         }
     };
 
@@ -138,12 +60,10 @@ const Navbar = () => {
         setIsMenuOpen(false);
     };
 
-    const getNavLinkClass = ({
-        isActive,
-    }) => {
-        return `rounded-full px-4 py-2 font-medium transition-colors ${isActive
-            ? "bg-[#CAEB66] text-black"
-            : "text-[#606060] hover:bg-gray-100 hover:text-black"
+    const getNavLinkClass = ({ isActive }) => {
+        return `rounded-full px-4 py-2 text-sm font-medium transition-colors ${isActive
+                ? "bg-[#CAEB66] text-[#03373D]"
+                : "text-gray-600 hover:bg-gray-100 hover:text-[#03373D]"
             }`;
     };
 
@@ -154,94 +74,37 @@ const Navbar = () => {
                 <div className="flex items-center">
                     <button
                         type="button"
-                        onClick={() =>
-                            setIsMenuOpen(
-                                (previous) =>
-                                    !previous
-                            )
-                        }
+                        onClick={() => setIsMenuOpen((previous) => !previous)}
                         className="mr-1 flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg transition hover:bg-gray-100 lg:hidden"
                         aria-label="Toggle navigation"
-                        aria-expanded={
-                            isMenuOpen
-                        }
+                        aria-expanded={isMenuOpen}
                     >
                         {isMenuOpen ? (
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         ) : (
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M4 6h16M4 12h12M4 18h16"
-                                />
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h12M4 18h16" />
                             </svg>
                         )}
                     </button>
 
-                    <Link
-                        to="/"
-                        onClick={
-                            closeMobileMenu
-                        }
-                        aria-label="ZapShift Home"
-                    >
+                    <Link to="/" onClick={closeMobileMenu} aria-label="ZapShift Home">
                         <ZapShiftLogo />
                     </Link>
                 </div>
 
                 {/* Desktop Navigation */}
-                <nav
-                    className="hidden lg:block"
-                    aria-label="Main navigation"
-                >
+                <nav className="hidden lg:block" aria-label="Main navigation">
                     <ul className="flex items-center gap-1">
-                        {navLinks.map(
-                            (link) => (
-                                <li
-                                    key={
-                                        link.path
-                                    }
-                                >
-                                    <NavLink
-                                        to={
-                                            link.path
-                                        }
-                                        end={
-                                            link.path ===
-                                            "/"
-                                        }
-                                        className={
-                                            getNavLinkClass
-                                        }
-                                    >
-                                        {
-                                            link.label
-                                        }
-                                    </NavLink>
-                                </li>
-                            )
-                        )}
+                        {navLinks.map((link) => (
+                            <li key={link.path}>
+                                <NavLink to={link.path} end={link.path === "/"} className={getNavLinkClass}>
+                                    {link.label}
+                                </NavLink>
+                            </li>
+                        ))}
                     </ul>
                 </nav>
 
@@ -249,35 +112,24 @@ const Navbar = () => {
                 <div className="flex items-center gap-2 md:gap-3">
                     <button
                         type="button"
-                        onClick={
-                            handleThemeChange
-                        }
+                        onClick={handleThemeChange}
                         className="group cursor-pointer rounded-full border-none bg-transparent p-2 outline-none transition-all duration-300 hover:bg-gray-100/50 active:scale-95"
                         aria-label="Change theme"
                     >
-                        <img
-                            src={themeBtn}
-                            alt=""
-                            className="h-6 w-6 transition-transform duration-700 group-hover:rotate-180"
-                        />
+                        <img src={themeBtn} alt="" className="h-6 w-6 transition-transform duration-700 group-hover:rotate-180" />
                     </button>
 
                     {loading ? (
                         <div className="hidden h-10 w-24 animate-pulse rounded-xl bg-gray-200 lg:block" />
                     ) : user ? (
                         <div className="hidden items-center gap-2 lg:flex">
-                            <Link
-                                to="/dashboard"
-                                className="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium transition hover:bg-gray-100"
-                            >
+                            <Link to="/dashboard" className="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium transition hover:bg-gray-100">
                                 Dashboard
                             </Link>
 
                             <button
                                 type="button"
-                                onClick={
-                                    handleSignOut
-                                }
+                                onClick={handleSignOut}
                                 className="cursor-pointer rounded-xl bg-[#03373D] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#022428]"
                             >
                                 Sign Out
@@ -285,26 +137,16 @@ const Navbar = () => {
                         </div>
                     ) : (
                         <div className="hidden items-center gap-2 lg:flex">
-                            <Link
-                                to="/signin"
-                                className="rounded-xl border border-gray-200 px-5 py-2.5 font-medium transition hover:bg-gray-100"
-                            >
+                            <Link to="/signin" className="rounded-xl border border-gray-200 px-5 py-2.5 font-medium transition hover:bg-gray-100">
                                 Sign In
                             </Link>
 
                             <div className="flex items-center">
-                                <Link
-                                    to="/signup"
-                                    className="rounded-l-xl bg-[#CAEB66] px-5 py-2.5 font-semibold text-black transition hover:bg-[#b9dd50]"
-                                >
+                                <Link to="/signup" className="rounded-l-xl bg-[#CAEB66] px-5 py-2.5 font-semibold text-black transition hover:bg-[#b9dd50]">
                                     Sign Up
                                 </Link>
 
-                                <Link
-                                    to="/signup"
-                                    aria-label="Create account"
-                                    className="-ml-1 flex h-11 w-11 items-center justify-center rounded-full bg-black text-[#CAEB66]"
-                                >
+                                <Link to="/signup" aria-label="Create account" className="-ml-1 flex h-11 w-11 items-center justify-center rounded-full bg-black text-[#CAEB66]">
                                     <FaArrowRight className="-rotate-45" />
                                 </Link>
                             </div>
@@ -318,40 +160,21 @@ const Navbar = () => {
                 <div className="absolute left-0 right-0 top-[calc(100%+8px)] rounded-2xl border border-gray-100 bg-white p-4 shadow-xl lg:hidden">
                     <nav aria-label="Mobile navigation">
                         <ul className="space-y-1">
-                            {navLinks.map(
-                                (link) => (
-                                    <li
-                                        key={
-                                            link.path
+                            {navLinks.map((link) => (
+                                <li key={link.path}>
+                                    <NavLink
+                                        to={link.path}
+                                        end={link.path === "/"}
+                                        onClick={closeMobileMenu}
+                                        className={({ isActive }) =>
+                                            `block rounded-lg px-4 py-3 font-medium transition ${isActive ? "bg-[#CAEB66] text-black" : "text-gray-600 hover:bg-gray-100"
+                                            }`
                                         }
                                     >
-                                        <NavLink
-                                            to={
-                                                link.path
-                                            }
-                                            end={
-                                                link.path ===
-                                                "/"
-                                            }
-                                            onClick={
-                                                closeMobileMenu
-                                            }
-                                            className={({
-                                                isActive,
-                                            }) =>
-                                                `block rounded-lg px-4 py-3 font-medium transition ${isActive
-                                                    ? "bg-[#CAEB66] text-black"
-                                                    : "text-gray-600 hover:bg-gray-100"
-                                                }`
-                                            }
-                                        >
-                                            {
-                                                link.label
-                                            }
-                                        </NavLink>
-                                    </li>
-                                )
-                            )}
+                                        {link.label}
+                                    </NavLink>
+                                </li>
+                            ))}
                         </ul>
 
                         <div className="mt-3 border-t border-gray-100 pt-3">
@@ -359,21 +182,13 @@ const Navbar = () => {
                                 <div className="h-10 w-full animate-pulse rounded-lg bg-gray-200" />
                             ) : user ? (
                                 <div className="grid grid-cols-2 gap-2">
-                                    <Link
-                                        to="/dashboard"
-                                        onClick={
-                                            closeMobileMenu
-                                        }
-                                        className="rounded-lg border border-[#03373D] px-4 py-3 text-center font-medium text-[#03373D]"
-                                    >
+                                    <Link to="/dashboard" onClick={closeMobileMenu} className="rounded-lg border border-[#03373D] px-4 py-3 text-center font-medium text-[#03373D]">
                                         Dashboard
                                     </Link>
 
                                     <button
                                         type="button"
-                                        onClick={
-                                            handleSignOut
-                                        }
+                                        onClick={handleSignOut}
                                         className="cursor-pointer rounded-lg bg-[#03373D] px-4 py-3 text-center font-medium text-white"
                                     >
                                         Sign Out
@@ -381,23 +196,11 @@ const Navbar = () => {
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-2 gap-2">
-                                    <Link
-                                        to="/signin"
-                                        onClick={
-                                            closeMobileMenu
-                                        }
-                                        className="rounded-lg border border-gray-200 px-4 py-3 text-center font-medium"
-                                    >
+                                    <Link to="/signin" onClick={closeMobileMenu} className="rounded-lg border border-gray-200 px-4 py-3 text-center font-medium">
                                         Sign In
                                     </Link>
 
-                                    <Link
-                                        to="/signup"
-                                        onClick={
-                                            closeMobileMenu
-                                        }
-                                        className="rounded-lg bg-[#CAEB66] px-4 py-3 text-center font-semibold text-black"
-                                    >
+                                    <Link to="/signup" onClick={closeMobileMenu} className="rounded-lg bg-[#CAEB66] px-4 py-3 text-center font-semibold text-black">
                                         Sign Up
                                     </Link>
                                 </div>

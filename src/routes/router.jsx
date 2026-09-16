@@ -8,6 +8,7 @@ import AboutUs from "../pages/AboutUs/AboutUs";
 import ForgotPassword from "../pages/Authentication/ForgotPassword/ForgotPassword";
 import SignIn from "../pages/Authentication/SignIn/SignIn";
 import SignUp from "../pages/Authentication/SignUp/SignUp";
+import BeARider from "../pages/BeARider/BeARider";
 import Coverage from "../pages/Coverage/Coverage";
 import DashboardHome from "../pages/Dashboard/DashboardHome";
 import MyParcels from "../pages/Dashboard/MyParcels/MyParcels";
@@ -44,6 +45,14 @@ export const router = createBrowserRouter([
             {
                 path: "track-consignment",
                 element: <TrackConsignment />,
+            },
+            {
+                path: "be-a-rider",
+                element: (
+                    <PrivateRoute>
+                        <BeARider />
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "sendParcel",

@@ -211,6 +211,7 @@ const SendParcel = () => {
             const createdParcel =
                 response.data?.data;
 
+            // 🔥 UPDATED SUCCESS POPUP WITH OTP 🔥
             await Swal.fire({
                 icon: "success",
                 title:
@@ -231,6 +232,31 @@ const SendParcel = () => {
                     ">
                         Delivery charge: ৳${createdParcel.cost}
                     </p>
+
+                    <div style="
+                        margin-top: 15px; 
+                        padding: 10px; 
+                        background-color: #fef3c7; 
+                        border: 1px dashed #d97706; 
+                        border-radius: 8px;
+                    ">
+                        <p style="
+                            font-size: 12px; 
+                            color: #b45309; 
+                            margin-bottom: 5px;
+                        ">
+                            <strong>DELIVERY OTP (SHARE WITH RECEIVER)</strong>
+                        </p>
+                        <h2 style="
+                            font-size: 24px; 
+                            font-family: monospace; 
+                            letter-spacing: 4px; 
+                            color: #92400e; 
+                            margin: 0;
+                        ">
+                            ${createdParcel.deliveryOTP}
+                        </h2>
+                    </div>
                 `,
                 confirmButtonColor:
                     "#C6E871",

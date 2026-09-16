@@ -62,7 +62,6 @@ const AssignedDeliveries = () => {
         }
 
         const inputOptions = {
-            "picked-up": "Picked Up (Parcel collected)",
             "in-transit": "In Transit (On the way to hub)",
             "at-warehouse": "At Warehouse (Received at local hub)",
             "out-for-delivery": "Out for Delivery (Rider is nearby)",
@@ -79,19 +78,37 @@ const AssignedDeliveries = () => {
             showCancelButton: true,
             confirmButtonText: "Update Status",
             confirmButtonColor: "#CAEB66",
-            cancelButtonColor: "#d33",
-            inputValidator: (value) => {
-                if (!value) return "Please select a status";
-            },
         });
 
         if (!selectedStatus || selectedStatus === currentStatus) return;
 
+        let otpInput = null;
+
+        // 🔥 OTP PROMPT IF DELIVERED IS SELECTED 🔥
+        if (selectedStatus === "delivered") {
+            const { value: otp } = await Swal.fire({
+                title: "Enter Delivery OTP",
+                text: "Ask the receiver for the 6-digit delivery OTP to confirm the handover.",
+                input: "text",
+                inputPlaceholder: "123456",
+                showCancelButton: true,
+                confirmButtonColor: "#CAEB66",
+                inputValidator: (value) => {
+                    if (!value || value.length !== 6) return "Please enter a valid 6-digit OTP";
+                }
+            });
+
+            if (!otp) return; // Rider cancelled the OTP prompt
+            otpInput = otp;
+        }
+
         try {
             setUpdatingId(parcel._id);
 
+            // Sending status (and otp if delivered) to backend
             await axiosSecure.patch(`/riders/deliveries/${parcel._id}/status`, {
                 status: selectedStatus,
+                otp: otpInput,
             });
 
             toast.success(`Status updated to ${formatStatus(selectedStatus)}`);

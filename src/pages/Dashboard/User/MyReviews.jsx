@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
+
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const MyReviews = () => {
@@ -13,8 +14,9 @@ const MyReviews = () => {
         try {
             setLoading(true);
             const response = await axiosSecure.get("/parcels/my-parcels");
-            // Show only delivered parcels
-            const delivered = (response.data?.data || []).filter(p => p.shipment?.status === "delivered");
+            const delivered = (response.data?.data || []).filter(
+                (p) => p.shipment?.status === "delivered"
+            );
             setParcels(delivered);
         } catch (error) {
             console.error("Failed to load parcels:", error);
@@ -30,69 +32,110 @@ const MyReviews = () => {
     const handleAddReview = async (parcelId) => {
         const { value: formValues } = await Swal.fire({
             title: "Write a Review",
-            html:
-                '<input id="swal-rating" type="number" min="1" max="5" class="swal2-input" placeholder="Rating (1-5)">' +
-                '<textarea id="swal-feedback" class="swal2-textarea" placeholder="Write your feedback here..."></textarea>',
+            html: `
+                <div style="display: flex; flex-direction: column; gap: 10px; text-align: left;">
+                    <label style="font-size: 12px; font-weight: bold; color: #4b5563;">Rating (1 to 5 Stars):</label>
+                    <input id="swal-rating" type="number" min="1" max="5" class="swal2-input" placeholder="e.g. 5" style="margin: 0; width: 100%;">
+                    
+                    <label style="font-size: 12px; font-weight: bold; color: #4b5563; margin-top: 10px;">Your Feedback:</label>
+                    <textarea id="swal-feedback" class="swal2-textarea" placeholder="Write your delivery experience..." style="margin: 0; width: 100%; height: 100px;"></textarea>
+                </div>
+            `,
             focusConfirm: false,
             showCancelButton: true,
+            confirmButtonText: "Submit Review",
             confirmButtonColor: "#CAEB66",
             preConfirm: () => {
-                return [
-                    document.getElementById("swal-rating").value,
-                    document.getElementById("swal-feedback").value
-                ];
-            }
+                const rating = document.getElementById("swal-rating").value;
+                const feedback = document.getElementById("swal-feedback").value;
+                if (!rating || !feedback) {
+                    Swal.showValidationMessage("Please provide both rating and feedback!");
+                    return false;
+                }
+                if (Number(rating) < 1 || Number(rating) > 5) {
+                    Swal.showValidationMessage("Rating must be between 1 and 5!");
+                    return false;
+                }
+                return { rating: Number(rating), feedback };
+            },
         });
 
         if (formValues) {
-            const [rating, feedback] = formValues;
-
-            if (!rating || !feedback) {
-                toast.error("Both rating and feedback are required!");
-                return;
-            }
-
             try {
                 await axiosSecure.post("/reviews", {
                     parcelId,
-                    rating: Number(rating),
-                    feedback
+                    rating: formValues.rating,
+                    feedback: formValues.feedback,
                 });
+
                 toast.success("Review submitted successfully!");
             } catch (error) {
-                Swal.fire("Error", error.response?.data?.message || "Failed to submit review.", "error");
+                console.error("Review error:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Submission Failed",
+                    text: error.response?.data?.message || "Could not submit review.",
+                    confirmButtonColor: "#CAEB66",
+                });
             }
         }
     };
 
-    if (loading) return <div className="flex min-h-80 justify-center items-center"><span className="loading loading-spinner text-[#8BA63D]" /></div>;
+    if (loading) {
+        return (
+            <div className="flex min-h-80 items-center justify-center">
+                <span className="loading loading-ring loading-lg text-[#8BA63D]" />
+            </div>
+        );
+    }
 
     return (
-        <div className="bg-white p-8 rounded-3xl shadow-sm">
-            <h1 className="text-3xl font-bold text-[#03373D] mb-6">Leave a Review</h1>
-            <p className="text-gray-500 mb-8">Share your experience for parcels that have been delivered successfully.</p>
-
-            {parcels.length === 0 ? (
-                <p className="text-gray-400">You have no delivered parcels to review yet.</p>
-            ) : (
-                <div className="grid gap-4 md:grid-cols-2">
-                    {parcels.map(parcel => (
-                        <div key={parcel._id} className="p-5 border rounded-2xl bg-gray-50 flex justify-between items-center">
-                            <div>
-                                <p className="font-bold text-[#03373D]">{parcel.parcel?.name}</p>
-                                <p className="text-xs text-gray-500 font-mono mt-1">{parcel.trackingId}</p>
-                            </div>
-                            <button
-                                onClick={() => handleAddReview(parcel._id)}
-                                className="bg-[#CAEB66] text-[#03373D] font-bold px-4 py-2 rounded-lg hover:bg-lime-400 transition"
-                            >
-                                <FaStar className="inline mr-1 mb-1" /> Review
-                            </button>
-                        </div>
-                    ))}
+        <section>
+            <div className="rounded-3xl bg-white p-6 shadow-sm md:p-8">
+                <div className="border-b border-gray-100 pb-6">
+                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8BA63D]">
+                        Customer Feedback
+                    </p>
+                    <h1 className="mt-1 text-3xl font-bold text-[#03373D]">
+                        Leave a Review
+                    </h1>
+                    <p className="mt-2 text-sm text-gray-500">
+                        Share your delivery experience for parcels that have been delivered successfully.
+                    </p>
                 </div>
-            )}
-        </div>
+
+                {parcels.length === 0 ? (
+                    <div className="py-16 text-center text-sm text-gray-400">
+                        You have no delivered parcels eligible for review yet.
+                    </div>
+                ) : (
+                    <div className="mt-8 grid gap-4 md:grid-cols-2">
+                        {parcels.map((parcel) => (
+                            <div
+                                key={parcel._id}
+                                className="flex items-center justify-between rounded-2xl border border-gray-100 bg-[#F9FAFB] p-5"
+                            >
+                                <div>
+                                    <h3 className="font-bold text-[#03373D]">
+                                        {parcel.parcel?.name}
+                                    </h3>
+                                    <p className="mt-1 font-mono text-xs text-gray-400">
+                                        {parcel.trackingId}
+                                    </p>
+                                </div>
+
+                                <button
+                                    onClick={() => handleAddReview(parcel._id)}
+                                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-[#CAEB66] px-4 py-2.5 text-xs font-bold text-[#03373D] transition hover:bg-[#b9dd50] active:scale-95"
+                                >
+                                    <FaStar /> Write Review
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </section>
     );
 };
 

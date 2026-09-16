@@ -13,6 +13,8 @@ import Coverage from "../pages/Coverage/Coverage";
 import DashboardHome from "../pages/Dashboard/DashboardHome";
 import MyParcels from "../pages/Dashboard/MyParcels/MyParcels";
 import PaymentPage from "../pages/Dashboard/Payment/PaymentPage";
+import AssignedDeliveries from "../pages/Dashboard/Rider/AssignedDeliveries";
+import RiderEarnings from "../pages/Dashboard/Rider/RiderEarnings";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Home from "../pages/Home/Home/Home";
 import Pricing from "../pages/Pricing/Pricing";
@@ -101,6 +103,14 @@ export const router = createBrowserRouter([
             {
                 path: "payment/:parcelId",
                 element: <PaymentPage />,
+            },
+            {
+                path: "deliveries",
+                element: <AssignedDeliveries />,
+            },
+            {
+                path: "earnings",
+                element: <RiderEarnings />,
             },
         ],
     },

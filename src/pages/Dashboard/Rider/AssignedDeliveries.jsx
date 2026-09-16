@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { FaBoxesPacking, FaCopy, FaPhone, FaLocationDot } from "react-icons/fa6";
+import { FaBoxesPacking, FaCopy, FaPhone, FaLocationDot, FaPenToSquare } from "react-icons/fa6";
+import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
@@ -24,25 +25,23 @@ const AssignedDeliveries = () => {
     const axiosSecure = useAxiosSecure();
     const [deliveries, setDeliveries] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [updatingId, setUpdatingId] = useState(null);
+
+    const loadDeliveries = async () => {
+        try {
+            setLoading(true);
+            const response = await axiosSecure.get("/riders/my-deliveries");
+            setDeliveries(response.data?.data || []);
+        } catch (error) {
+            console.error("Error loading deliveries:", error);
+            toast.error("Failed to load assigned deliveries.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        let ignore = false;
-        const loadDeliveries = async () => {
-            try {
-                setLoading(true);
-                const response = await axiosSecure.get("/riders/my-deliveries");
-                if (!ignore) {
-                    setDeliveries(response.data?.data || []);
-                }
-            } catch (error) {
-                console.error("Error loading deliveries:", error);
-            } finally {
-                if (!ignore) setLoading(false);
-            }
-        };
-
         loadDeliveries();
-        return () => { ignore = true; };
     }, [axiosSecure]);
 
     const handleCopy = async (txt) => {
@@ -51,6 +50,57 @@ const AssignedDeliveries = () => {
             toast.success("Tracking ID copied.");
         } catch {
             toast.error("Copy failed.");
+        }
+    };
+
+    const handleStatusUpdate = async (parcel) => {
+        const currentStatus = parcel.shipment?.status || "pending";
+
+        if (currentStatus === "delivered") {
+            toast.error("Delivered parcels cannot be updated.");
+            return;
+        }
+
+        const inputOptions = {
+            "picked-up": "Picked Up (Parcel collected)",
+            "in-transit": "In Transit (On the way to hub)",
+            "at-warehouse": "At Warehouse (Received at local hub)",
+            "out-for-delivery": "Out for Delivery (Rider is nearby)",
+            "delivered": "Delivered (Handed to receiver)",
+            "cancelled": "Cancelled (Delivery failed)",
+        };
+
+        const { value: selectedStatus } = await Swal.fire({
+            title: "Update Delivery Status",
+            text: `Parcel: ${parcel.trackingId}`,
+            input: "select",
+            inputOptions,
+            inputValue: currentStatus,
+            showCancelButton: true,
+            confirmButtonText: "Update Status",
+            confirmButtonColor: "#CAEB66",
+            cancelButtonColor: "#d33",
+            inputValidator: (value) => {
+                if (!value) return "Please select a status";
+            },
+        });
+
+        if (!selectedStatus || selectedStatus === currentStatus) return;
+
+        try {
+            setUpdatingId(parcel._id);
+
+            await axiosSecure.patch(`/riders/deliveries/${parcel._id}/status`, {
+                status: selectedStatus,
+            });
+
+            toast.success(`Status updated to ${formatStatus(selectedStatus)}`);
+            await loadDeliveries();
+        } catch (error) {
+            console.error("Status update error:", error);
+            Swal.fire("Update Failed", error.response?.data?.message || "Could not update status.", "error");
+        } finally {
+            setUpdatingId(null);
         }
     };
 
@@ -69,7 +119,7 @@ const AssignedDeliveries = () => {
                     <div>
                         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#8BA63D]">Rider Panel</p>
                         <h1 className="mt-1 text-3xl font-bold text-[#03373D]">Assigned Deliveries</h1>
-                        <p className="mt-2 text-sm text-gray-500">Parcels assigned to you for pickup and delivery.</p>
+                        <p className="mt-2 text-sm text-gray-500">Update parcel delivery progress and manage assigned tasks.</p>
                     </div>
 
                     <div className="rounded-full bg-[#F2F8DE] px-4 py-2 text-sm font-semibold text-[#65782C]">
@@ -91,6 +141,8 @@ const AssignedDeliveries = () => {
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                         {deliveries.map((parcel) => {
                             const status = parcel.shipment?.status || "pending";
+                            const isDelivered = status === "delivered";
+
                             return (
                                 <article key={parcel._id} className="rounded-2xl border border-gray-100 bg-[#F9FAFB] p-6 space-y-4">
                                     <div className="flex items-start justify-between gap-4">
@@ -98,7 +150,7 @@ const AssignedDeliveries = () => {
                                             <h3 className="font-bold text-[#03373D] text-lg">{parcel.parcel?.name}</h3>
                                             <div className="flex items-center gap-2 mt-1">
                                                 <span className="font-mono text-xs text-gray-500">{parcel.trackingId}</span>
-                                                <button onClick={() => handleCopy(parcel.trackingId)} className="text-gray-400 hover:text-[#8BA63D]">
+                                                <button onClick={() => handleCopy(parcel.trackingId)} className="text-gray-400 hover:text-[#8BA63D] cursor-pointer">
                                                     <FaCopy size={12} />
                                                 </button>
                                             </div>
@@ -110,7 +162,7 @@ const AssignedDeliveries = () => {
                                     </div>
 
                                     {/* Pickup Info */}
-                                    <div className="rounded-xl bg-white p-4 border border-gray-100 text-xs space-y-2">
+                                    <div className="rounded-xl bg-white p-4 border border-gray-100 text-xs space-y-1.5">
                                         <p className="font-bold text-gray-400 uppercase tracking-wider text-[10px]">Pickup From (Sender)</p>
                                         <p className="font-semibold text-gray-800">{parcel.sender?.name}</p>
                                         <p className="text-gray-500 flex items-center gap-1"><FaPhone size={10} /> {parcel.sender?.contact}</p>
@@ -118,11 +170,29 @@ const AssignedDeliveries = () => {
                                     </div>
 
                                     {/* Dropoff Info */}
-                                    <div className="rounded-xl bg-white p-4 border border-gray-100 text-xs space-y-2">
+                                    <div className="rounded-xl bg-white p-4 border border-gray-100 text-xs space-y-1.5">
                                         <p className="font-bold text-gray-400 uppercase tracking-wider text-[10px]">Deliver To (Receiver)</p>
                                         <p className="font-semibold text-gray-800">{parcel.receiver?.name}</p>
                                         <p className="text-gray-500 flex items-center gap-1"><FaPhone size={10} /> {parcel.receiver?.contact}</p>
                                         <p className="text-gray-500 flex items-start gap-1"><FaLocationDot size={10} className="mt-0.5 shrink-0" /> {parcel.receiver?.address}, {parcel.receiver?.region}</p>
+                                    </div>
+
+                                    {/* Action Button */}
+                                    <div className="pt-2">
+                                        {!isDelivered ? (
+                                            <button
+                                                onClick={() => handleStatusUpdate(parcel)}
+                                                disabled={updatingId === parcel._id}
+                                                className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#CAEB66] py-3 text-xs font-bold text-[#03373D] transition hover:bg-[#b9dd50] active:scale-95 disabled:opacity-50 cursor-pointer"
+                                            >
+                                                <FaPenToSquare />
+                                                {updatingId === parcel._id ? "Updating Status..." : "Update Delivery Status"}
+                                            </button>
+                                        ) : (
+                                            <div className="rounded-xl bg-green-50 py-2.5 text-center text-xs font-bold text-green-700 border border-green-200">
+                                                ✓ Delivery Completed
+                                            </div>
+                                        )}
                                     </div>
                                 </article>
                             );

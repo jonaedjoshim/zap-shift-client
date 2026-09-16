@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FaBoxOpen, FaCopy, FaCreditCard, FaMagnifyingGlass } from "react-icons/fa6";
+import { FaBoxOpen, FaCopy, FaCreditCard, FaKey, FaMagnifyingGlass } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -93,12 +93,12 @@ const MyParcels = () => {
         );
     }, [parcels, search]);
 
-    const handleCopyTrackingId = async (trackingId) => {
+    const handleCopy = async (txt, label) => {
         try {
-            await navigator.clipboard.writeText(trackingId);
-            toast.success("Tracking ID copied.");
+            await navigator.clipboard.writeText(txt);
+            toast.success(`${label} copied to clipboard!`);
         } catch {
-            toast.error("Could not copy tracking ID.");
+            toast.error("Copy failed.");
         }
     };
 
@@ -187,7 +187,8 @@ const MyParcels = () => {
                                 <thead>
                                     <tr className="border-b border-gray-100 text-left text-xs uppercase tracking-wider text-gray-400">
                                         <th className="px-3 py-4">Parcel</th>
-                                        <th className="px-3 py-4">Tracking</th>
+                                        <th className="px-3 py-4">Tracking ID</th>
+                                        <th className="px-3 py-4">Delivery OTP</th>
                                         <th className="px-3 py-4">Receiver</th>
                                         <th className="px-3 py-4">Cost</th>
                                         <th className="px-3 py-4">Payment</th>
@@ -221,13 +222,33 @@ const MyParcels = () => {
 
                                                         <button
                                                             type="button"
-                                                            onClick={() => handleCopyTrackingId(parcel.trackingId)}
+                                                            onClick={() => handleCopy(parcel.trackingId, "Tracking ID")}
                                                             className="text-gray-400 transition hover:text-[#8BA63D] cursor-pointer"
-                                                            aria-label="Copy tracking ID"
+                                                            title="Copy Tracking ID"
                                                         >
                                                             <FaCopy />
                                                         </button>
                                                     </div>
+                                                </td>
+
+                                                {/* Delivery OTP Display */}
+                                                <td className="px-3 py-5">
+                                                    {parcel.deliveryOTP ? (
+                                                        <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 w-fit">
+                                                            <FaKey size={10} className="text-amber-500" />
+                                                            <span>{parcel.deliveryOTP}</span>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleCopy(parcel.deliveryOTP, "Delivery OTP")}
+                                                                className="text-amber-400 hover:text-amber-800 cursor-pointer ml-1"
+                                                                title="Copy OTP"
+                                                            >
+                                                                <FaCopy size={11} />
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-xs text-gray-400">N/A</span>
+                                                    )}
                                                 </td>
 
                                                 <td className="px-3 py-5 text-gray-600">
@@ -302,6 +323,15 @@ const MyParcels = () => {
                                                 </span>
                                             </div>
 
+                                            {parcel.deliveryOTP && (
+                                                <div className="flex justify-between gap-4 items-center">
+                                                    <span className="text-gray-400">Delivery OTP</span>
+                                                    <span className="font-mono text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                                                        {parcel.deliveryOTP}
+                                                    </span>
+                                                </div>
+                                            )}
+
                                             <div className="flex justify-between gap-4">
                                                 <span className="text-gray-400">Cost</span>
                                                 <span className="font-semibold">
@@ -331,7 +361,7 @@ const MyParcels = () => {
 
                                             <button
                                                 type="button"
-                                                onClick={() => handleCopyTrackingId(parcel.trackingId)}
+                                                onClick={() => handleCopy(parcel.trackingId, "Tracking ID")}
                                                 className="shrink-0 text-gray-400 hover:text-[#8BA63D]"
                                                 aria-label="Copy tracking ID"
                                             >
